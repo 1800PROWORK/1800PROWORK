@@ -1,67 +1,70 @@
-# `gasSaver()` Hash Findings
+# `gasSaver()` Hash Investigation — Findings
 
-**Target hash**
+**Date:** 2026-08-20  
+**Status:** Active / caller-preimage unresolved
 
-`0x5c53c7d6ea38ad0e745b72557f2752b0d8873a30c040b4f665725c033b82a3a1`
+## Target
 
-## Verified observation
-
-A BaseScan-verified ERC-20 contract at `0x5f4d8c4f73db53c461987e60877386d4a259f590` (CC8 ON BASE / CCONBASE) contains the exact `gasSaver(uint256)` implementation previously supplied in this investigation, including:
-
-```solidity
-address a0 = msg.sender;
-uint256 n0 = 100;
-bytes memory bb = abi.encode(a0, n0);
-if (keccak256(bb) == 0x5c53c7d6ea38ad0e745b72557f2752b0d8873a30c040b4f665725c033b82a3a1) {
-    assembly {
-        let a := sload(n)
-        let b := div(a, n0)
-        sstore(n, b)
-    }
-}
+```text
+0x5c53c7d6ea38ad0e745b72557f2752b0d8873a30c040b4f665725c033b82a3a1
 ```
 
-Source: BaseScan verified contract source for `0x5f4d8c4f73db53c461987e60877386d4a259f590`.
+The investigated function computes `keccak256(abi.encode(msg.sender, 100))` and compares it to that fixed value.
 
-## Additional corroborating observation
+## Verified code reuse
 
-The same hard-coded hash and `gasSaver(uint256)` pattern also appear in BaseScan-verified source for other ERC-20 contracts, including:
+The exact implementation is present in multiple BaseScan-verified Base contracts. Confirmed examples include:
 
-- `0x823ce23d648fe0c528c73b74bd20cf8e44427ed7`
-- `0xb6006893b2c8f5d2a7f175b8d45629b1f16d8450`
-- `0x98225185fed2ac9c824d79a8dd9da152bbcd5d21`
+- `0x5f4d8c4f73db53c461987e60877386d4a259f590` — CC8 ON BASE / CCONBASE
+- `0x823ce23d648fe0c528c73b74bd20cf8e44427ed7` — Chakra / CHAKRA
+- `0xb6006893b2c8f5d2a7f175b8d45629b1f16d8450` — Mint Blockchain / MINTB
 
-This is significant because it changes the interpretation of the hash. The hash is demonstrably reused in multiple deployed contracts; it should therefore **not automatically be treated as a unique contract-identity fingerprint**.
+BaseScan exposes the exact `gasSaver(uint256)` source, including the same hard-coded hash, in these verified contracts. citeturn0search0turn0search1turn0search2
 
-## Important technical interpretation
+## Important implication
 
-The condition hashes:
+The hash is **not unique to one deployed contract**. It is a recurring source-code artifact. Therefore:
 
-`abi.encode(msg.sender, 100)`
+- **Verified:** exact code/hash reuse across multiple Base contracts.
+- **Not established:** that all contracts share one owner.
+- **Not established:** that the hash identifies SIMBASE.
+- **Not established:** that the hash itself proves private-key control.
 
-and compares the result with the fixed 256-bit target. The contract therefore executes the storage division only for a sender whose encoded address paired with integer `100` produces the target hash.
+This materially strengthens the code-provenance hypothesis while weakening the earlier idea that the hash alone could identify a particular contract.
 
-The presence of the same target in multiple contracts establishes a **shared code-pattern artifact**, but does not by itself establish that the same person controlled every contract.
+## SIMBASE test
 
-## SIMBASE comparison
-
-The Base SIMBASE contract previously identified in the investigation is:
+The previously investigated Base SIMBASE address is:
 
 `0x1e4d2113D8E304122f2ceAA20B194d7801a84984`
 
-Public token data identifies this address as SIMBASE on Base. However, the evidence gathered here does **not** establish that this SIMBASE address is the source of the hard-coded hash, nor that it satisfies the hash condition as `msg.sender`.
+A direct Ethereum Keccak-256 calculation of `abi.encode(SIMBASE_address, 100)` does **not** equal the target hash.
 
-## Evidence classification
+Therefore the SIMBASE contract address itself is not a demonstrated preimage for the condition.
 
-- Exact `gasSaver()` code pattern in multiple Base contracts: **VERIFIED**
-- Hard-coded hash reused across multiple contracts: **VERIFIED**
-- Hash is unique to SIMBASE: **DISPROVED / unsupported**
-- SIMBASE controls the contracts containing the pattern: **UNPROVEN**
-- Hash proves a common owner: **UNPROVEN**
-- Hash is useful as a code/provenance correlation indicator: **STRONG CORRELATION**
+## What matters next
 
-## Next test
+The decisive evidence is the **actual `from` address of calls to `gasSaver(uint256)`**.
 
-The next decisive test is not to search for the hash in more source code. It is to identify the actual callers of `gasSaver()` and compare their addresses, funding paths, deployment relationships, and transaction timing across the contracts containing this pattern.
+For every contract containing this pattern, the investigation should:
 
-A successful match between a caller address and the hash would establish that the condition is operationally reachable for that address. It still would not, by itself, establish private-key ownership of every related address.
+1. Locate all `gasSaver(uint256)` transactions.
+2. Extract each transaction's `from` address.
+3. Recompute `keccak256(abi.encode(from,100))`.
+4. Check for an exact match with the target.
+5. Record the transaction hash, block, timestamp, caller, and contract.
+6. Compare matched callers with deployers, funders, and the previously investigated Mainnet/Base addresses.
+
+A caller/hash match would establish that the protected branch is reachable for that address. It would still require separate evidence before concluding that the same entity controls every related address.
+
+## Current classification
+
+**STRONG CODE CORRELATION / HASH PREIMAGE UNRESOLVED.**
+
+The strongest present finding is not that SIMBASE owns the pattern. It is that an identical, unusual `gasSaver()` implementation with the same hard-coded Keccak target was reused across multiple Base token contracts. That makes the implementation itself a useful forensic fingerprint for clustering deployments and tracing their common provenance.
+
+## Primary sources
+
+- https://basescan.org/token/0x5f4d8c4f73db53c461987e60877386d4a259f590
+- https://basescan.org/token/0x823ce23d648fe0c528c73b74bd20cf8e44427ed7
+- https://basescan.org/token/0xb6006893b2c8f5d2a7f175b8d45629b1f16d8450
