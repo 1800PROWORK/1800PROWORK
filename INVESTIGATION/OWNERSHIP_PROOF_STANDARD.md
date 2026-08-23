@@ -6,6 +6,20 @@
 ## Core rule
 On-chain behavior can establish that an address acted, but it does not by itself establish who controls the private key. The strongest direct proof for an EOA is a fresh cryptographic signature produced by that address and independently verified. Ethereum authentication is based on proving control of an address by signing a message. EIP-191 defines signed-data framing; EIP-712 provides structured, human-readable typed-data signing. EIP-1271 applies when the address is a smart-contract account rather than an EOA.
 
+## EIP-1271 implementation-specific test
+If the target is a smart-contract wallet implementing the supplied `isValidSignature(bytes32,bytes)` pattern, the contract recovers the signer and compares it to its current `owner`. A successful call returns `0x1626ba7e`; an unsuccessful signature returns `0xffffffff` in the implementation supplied for this investigation.
+
+For that implementation, preserve:
+- target contract address
+- current `owner()` value at verification time
+- exact 32-byte challenge hash
+- exact 65-byte signature `(r,s,v)`
+- `isValidSignature` call data and return value
+- independent `ecrecover` result
+- block number/timestamp used to establish the owner state
+
+This proves that the contract accepted a signature attributable to its configured owner at the tested state. It does not, by itself, establish the real-world identity of that owner.
+
 ## Evidence tiers
 
 ### Tier 1 — Direct cryptographic control
