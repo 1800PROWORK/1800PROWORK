@@ -33,6 +33,10 @@ The supplied BaseScan page reports exactly 10 transactions for the contract, all
 
 All displayed transaction values are 0 ETH; the page shows small transaction fees.
 
+## Independent contextual corroboration
+
+A current Coinbase market-data page identifies SIMBASE (SIMBA) on Base at the exact contract address `0x1e4d2113D8E304122f2ceAA20B194d7801a84984`. It reports approximately 5 billion SIMBA circulating/total supply. This is market-data corroboration only and does not establish ownership or control.
+
 ## Investigative significance
 
 The creator address is the highest-value lead. The approval transactions alone do not establish common control between SIMBASE and any other investigated address.
@@ -50,10 +54,12 @@ Required follow-up:
 
 ## Evidence classification
 
-**VERIFIED:** The supplied BaseScan record shows this contract as SIMBASE (SIMBA), identifies a creator, and lists 10 approval transactions.
+**VERIFIED:** The supplied BaseScan record shows this contract as SIMBASE (SIMBA), identifies a creator, and lists 10 approval transactions. Independent market data also maps the token to the same Base contract address.
 
 **UNPROVEN:** Any claim that the SIMBASE creator controls the investigated addresses or that SIMBASE is part of the same ownership structure.
 
-## Source
+## Sources
 
 Primary visual evidence supplied by the investigator from BaseScan for contract `0x1e4d2113D8E304122f2ceAA20B194d7801a84984`.
+
+Secondary contextual source: Coinbase SIMBASE market data.
