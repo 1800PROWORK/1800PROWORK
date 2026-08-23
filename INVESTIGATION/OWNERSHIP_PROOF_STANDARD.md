@@ -67,6 +67,21 @@ Known artifacts include:
 - June 2024 Base deployment cluster
 - `gasSaver()` hash hypothesis
 
+### Paxos-associated funding edge
+The user-supplied Etherscan account view identifies `0x264bd8291fAE1D75DB2c5F573b07faA6715997B5` as `Paxos 4 / Paxos / Exchange`, with the label attributed to the hildobby compilation, and shows `Paxos: Treasury` as its funding source. These are attribution labels, not cryptographic proof of ownership.
+
+The supplied account view reports approximately 6,174,804 transactions and continuing outbound activity. The concrete edge to the target is:
+
+`0x264bd8291fAE1D75DB2c5F573b07faA6715997B5` → `0x33D2443Bf16e48012D520c9ced7467814F9F8AEF`
+
+Amount: `0.00190382 ETH`
+
+Transaction: `0x985d9f796b811a2b9aa03c360732c7b76c7268daec09c6655a7beeb3293b35f8`
+
+Timestamp supplied: `Aug-16-2024 10:20:11 PM +UTC`
+
+Interpretation: this is confirmed funding evidence, but it does not establish common ownership. Because the source is a high-volume operational address, the next forensic test is batch/distribution analysis: enumerate recipients funded in the same operational window and compare their subsequent timing, contracts, tokens, and cross-chain behavior with the target.
+
 None of these, individually or collectively, should currently be described as proof that a particular human controls the target address.
 
 ## Required preservation package
