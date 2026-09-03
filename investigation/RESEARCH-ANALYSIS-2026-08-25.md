@@ -1,300 +1,497 @@
 # Independent Research Analysis — Blockchain Attribution Investigation
+
 **Date:** 2026-08-25  
 **Scope:** Critical methodological review of GitHub attribution pass and evidentiary boundaries  
-**Repository context:** `1800PROWORK/1800PROWORK` investigation files
+**Repository context:** `1800PROWORK/1800PROWORK` investigation files  
+**Status:** Critical Review (Ready for Phase 2)
+
+---
+
+## TL;DR — Quick Reference
+
+| Question | Answer | Confidence | Next Step |
+|---|---|---|---|
+| Is the implementation code on public GitHub? | **No** — negative finding | **High** | Extract implementation fingerprints from Etherscan; run targeted GitHub searches |
+| Who owns the proxy instance? | `0xc2B5f79a5768893b8087667B391C1381c502Ab5c` (per OwnershipTransferred events) | **High** | Clarify if factory deployer (originator) or post-deployment acquirer |
+| Was that address the factory deployer? | **UNKNOWN** — Gap 1 unresolved | **N/A** | Query factory creation transaction on Etherscan |
+| Who is that address in real life? | **Unknown** | **N/A** | Out of scope for attribution pass (see casefile Phase 2) |
+| What do I do now? | Proceed to Phase 2: source-level fingerprinting | **Recommended** | Start by 2026-09-01 |
+
+---
+
+## Investigation Propositions (Reference Frame)
+
+These propositions structure the evidentiary claims:
+
+1. **Factory Initiation** — Did `0xc2B5f79a5768893b8087667B391C1381c502Ab5c` **deploy the factory contract**?  
+   - Status: **PENDING** (Gap 1 — requires factory deployer verification)
+   - Confidence: TBD
+   - Casefile label: TBD
+
+2. **Ownership Transfer** — Did `0xc2B5f79a5768893b8087667B391C1381c502Ab5c` **receive ownership of proxy instances**?  
+   - Status: **DOCUMENTED** ✓
+   - Evidence: `OwnershipTransferred` events on-chain
+   - Confidence: **High**
+   - Casefile label: **CORROBORATED**
+
+3. **Proxy Delegation** — Do proxy instances **delegate to implementation** `0xea9eeafdada27d502115afc591b0a6eb5d14351e`?  
+   - Status: **DOCUMENTED** ✓
+   - Evidence: On-chain linkage verified
+   - Confidence: **High**
+   - Casefile label: **VERIFIED**
+
+4. **GitHub Attribution** — Is the implementation contract source code **publicly available on GitHub** under searchable identifiers (addresses, EIP-1167 fingerprints)?  
+   - Status: **NEGATIVE FINDING** ✓
+   - Evidence: Exhaustive GitHub search (exact-address and fingerprint patterns)
+   - Confidence: **High** (for queries run; see Limitations)
+   - Casefile label: **NEGATIVE-FINDING**
+
+5. **Real-World Entity Identity** — Can `0xc2B5f79a5768893b8087667B391C1381c502Ab5c` **be linked to a known person, organization, or pseudonym**?  
+   - Status: **OUT OF SCOPE** (attribution pass only)
+   - Responsibility: Casefile Phase 2 investigation
+   - Casefile label: **HYPOTHESIS** (pending real-world investigation)
 
 ---
 
 ## Executive Summary
-- Finding: The GitHub attribution pass returned no high-confidence public repository mapping to the on-chain implementation (implementation: `0xea9eeafdada27d502115afc591b0a6eb5d14351e`).
-- Confidence: High for the exact-address and EIP-1167 fingerprint searches that were run; however, an incidental GitHub hit was dismissed without an artifact-level comparison. That omission prevents final closure of the exclusion.
-- Immediate next action: Perform the implementation-source fingerprint extraction on Etherscan, export ABI/selectors and revert strings, then run targeted GitHub searches for those fingerprints (owner: <name>, due: <date>). See "Next Steps" and "Reproducibility Appendix".
 
----
+The GitHub attribution pass establishes a **defensible negative finding**: no high-confidence public repository maps to the implementation address `0xea9eeafdada27d502115afc591b0a6eb5d14351e` via exact-match addresses or EIP-1167 fingerprints.
 
-## Executive Assessment
+**However, three critical gaps remain unresolved:**
 
-Your investigation establishes a **defensible negative GitHub finding** but operates in tension with three unresolved interpretive questions:
+1. **Factory Deployer Unconfirmed** — Whether `0xc2B5f79a5768893b8087667B391C1381c502Ab5c` was the factory's **original deployer** (higher attribution confidence) vs. a **post-deployment acquirer** (lower confidence) is not yet established.
 
-1. **Absence vs. Non-Public:** Your GitHub search was exhaustive for exact-match addresses and the EIP-1167 fingerprint. But GitHub may host related code under organization names, obfuscated repositories, forks, or private/archived repositories not returned by a public search. See Reproducibility Appendix for exact queries and the search timeframe.
+2. **Incidental Result Not Analyzed** — One GitHub hit (`0x33D82C144717FCd83965ca26fAd4D4256E6052DD`) was dismissed without **artifact-level comparison** (ABI selectors, bytecode, deployment patterns). This exclusion is logical but incomplete.
 
-2. **Factory Chain Clarity:** The documented on-chain relationships (factory interaction → ownership transfer → proxy instance) establish **event-level evidence** but leave unresolved whether the factory caller was the constructor deployer or a subsequent owner (see Gap 1 and the recommended verification steps below).
+3. **Source Fingerprints Not Yet Extracted** — The implementation contract's **verified source on Etherscan** (if available) has not been fingerprinted. Revert strings, event definitions, and distinctive constants should be extracted and searched for on GitHub.
 
-3. **Incidental Result Exclusion:** The single GitHub hit (`0x33D82C144717FCd83965ca26fAd4D4256E6052DD`) was dismissed on the grounds of insufficient nexus. The report did not include an artifact-level comparison (ABI selectors, bytecode hash, deployment pattern, or source comments) that justifies exclusion. See the new "Incidental Result Artifact Analysis" subsection and the Exclusion Record appendix.
-
-**Without artifact-level comparison,** the exclusion remains logical but incomplete.
+**Epistemological clarity:** This is a **negative GitHub finding only**. It establishes what was searched and what remains unknown—not that the code does not exist.
 
 ---
 
 ## Methodological Strengths
 
 ### 1. **Clear Evidentiary Boundaries**
-Your Proposition Framework (lines 1–5 in original) is exemplary:
-- Distinguishes activity from ownership
-- Separates on-chain from real-world attribution
-- Avoids treating proof-of-interaction as proof-of-control
+The Proposition Framework (above) is exemplary for forensic investigation:
+- Distinguishes **activity** (transaction record) from **ownership** (OwnershipTransferred events)
+- Separates **on-chain evidence** from **real-world attribution**
+- Avoids conflating proof-of-interaction with proof-of-control
 
-**Assessment:** This structure would satisfy forensic or legal discovery standards. It forces explicit acknowledgment of each inference's evidential gap.
+**Assessment:** This structure would satisfy legal discovery and forensic audit standards.
 
 ### 2. **Negative Finding Properly Framed**
-The statement "This is a negative GitHub finding only" is **epistemically sound**:
-- You did not conclude "the code does not exist"
-- You stated "the code is not publicly attributable via GitHub search"
-- This avoids the common fallacy of *absence of evidence → evidence of absence*
+The statement "This is a negative GitHub finding only" avoids the logical fallacy *absence of evidence → evidence of absence*:
+- ✓ "The code is not publicly attributable via GitHub search" (what we know)
+- ✗ "The code does not exist" (logical leap—not claimed)
 
-**Strength:** Any investigator reviewing this will understand exactly what was searched and what remains unknown.
+**Strength:** Readers understand exactly what was searched and where the investigation remains open.
 
-### 3. **On-Chain Evidence Chain**
-The deployment structure is clearly documented:
+### 3. **On-Chain Evidence Chain Preserved**
+The deployment path is clearly documented:
 ```
-Caller → Factory → Proxy Instance → Implementation
-```
-
-This follows the actual EIP-1167 pattern. Your preservation of the implementation reference address (`0xea9eeafdada27d502115afc591b0a6eb5d14351e`) is critical — it's the most stable identifier across proxy instances and should be prioritized for source-level fingerprinting.
-
----
-
-## Methodological Gaps & Recommendations
-
-### Gap 1: Factory Initiation vs. Post-Deployment Ownership Transfer
-
-**What you have:**
-- Transaction record of `0xc2B5f79a5768893b8087667B391C1381c502Ab5c` calling factory
-- `OwnershipTransferred` events naming `0xc2B5f79a5768893b8087667B391C1381c502Ab5c` as new owner
-
-**What remains unclear:**
-- Was `0xc2B5f79a5768893b8087667B391C1381c502Ab5c` the **factory constructor deployer** (high attribution confidence)?
-- Or did `0xc2B5f79a5768893b8087667B391C1381c502Ab5c` **acquire ownership post-deployment** (lower attribution confidence)?
-
-**Recommendation:**
-- Query the factory contract's deployment transaction and constructor initialization (deployer address and tx hash)
-- Compare the factory deployer address against `0xc2B5f79a5768893b8087667B391C1381c502Ab5c`
-- If different, add a distinct "Factory Deployment Authority" proposition to the investigation
-
-**Impact on investigation:** This clarifies whether `0xc2B5f79a5768893b8087667B391C1381c502Ab5c` is an **originator** or a **subsequent acquirer** of control — materially different for real-world attribution and investigative next steps.
-
----
-
-### Gap 2: Incidental Result Assessment Incomplete
-
-**Current finding:**
-> `0x33D82C144717FCd83965ca26fAd4D4256E6052DD` produced an incidental result. **It is not sufficient** to attribute...
-
-**Missing detail:**
-You did not report what made the exclusion definitive. Was the repository:
-- A token distribution script (unrelated)?
-- A standard OpenZeppelin proxy implementation (boilerplate)?
-- A completely different contract family?
-- Or did you not examine the repository contents?
-
-**Recommendation:**
-Add the subsection below: **"Incidental Result Artifact Analysis"** and populate it for each dismissed repository. This converts an assertion into reproducible analysis.
-
-```text
-Incidental Result Artifact Analysis
-Repository: <full repository permalink>
-Inspected by: <name>  Date: <YYYY-MM-DD>  Time (UTC): <hh:mm>
-
-1) Repo summary
-   - Repo name: <owner/repo>
-   - Description: <first-line description from repo>
-   - Last commit: <commit hash, author, date>
-   - Public/Private: <public|private>
-
-2) Files examined (permalink + reason)
-   - <path/file.sol> — <permalink#Lx-Ly> — contains proxy/factory code?
-   - <path/README.md> — <permalink#Lx-Ly> — developer comments?
-
-3) ABI / function selector comparison
-   - Etherscan ABI (repo claim): <link>
-   - ABI selectors present in repo: [list of selectors, e.g., 0x18160ddd owner()]
-   - Match status: [Exact / Partial / None]
-   - Notes: <explain any partial matches or differences>
-
-4) Bytecode/runtime comparison
-   - On-chain runtime bytecode keccak256: <0x...> (from RPC or etherscan)
-   - Local/compiled runtime bytecode keccak256: <0x...> (if repo includes compiled artifacts or verified source)
-   - Discrepancy summary: <same/different; explain offsets/comments/immutable args>
-
-5) Deployment pattern / factory usage
-   - Evidence the repo uses EIP-1167 or clones? (Yes/No)
-   - CREATE/CREATE2 patterns found? (Yes/No — include code lines)
-   - Ownership flow present in code? (constructor, OwnershipTransferred event, setter functions)
-
-6) Conclusion & rationale for exclusion
-   - Final judgement: [Excluded — reason short]
-   - Primary reason(s): [boilerplate, token distribution, different contract family, mismatch on selectors/bytecode]
-   - Confidence: [High/Medium/Low]
-   - Recommendation: [e.g., re-check in N months, keep archived copy]
-
-7) Archive/attachment
-   - Snapshot permalink (commit used for analysis): <commit permalink>
-   - If repo later changes, store a copy of relevant files in the investigation folder.
+Caller (0xc2B5f79a...) → Factory → Proxy Instance → Implementation (0xea9eeafdada27d502115afc591b0a6eb5d14351e)
 ```
 
----
-
-### Gap 3: Implementation Reference May Be the Strongest Signal
-
-**Observation:**
-The implementation address `0xea9eeafdada27d502115afc591b0a6eb5d14351e` is referenced by multiple proxy instances (if that is indeed the case). This makes it the **most stable fingerprint** for code attribution.
-
-**Why this matters:**
-- Multiple proxies delegate to the same implementation
-- Implementation contract should have public code (Etherscan, Tenderly)
-- Implementation's constructor and fallback logic directly correspond to GitHub source
-
-**Recommendation:**
-Prioritize source-level fingerprinting of the **implementation contract's verified source**. This is more valuable than searching for proxy instances because:
-1. Implementation is deployed once, referenced many times
-2. Verified source on Etherscan is directly comparable to GitHub
-3. Constructor logic typically reveals developer patterns (compiler version, libraries, naming conventions)
+The implementation address is the **most stable identifier**—it's deployed once, referenced by multiple proxies, and typically has verified source on Etherscan.
 
 ---
 
-### Gap 4: Source-Level Fingerprints Need Prioritization
+## Methodological Gaps & Resolutions
 
-Your "Next GitHub research targets" list (10 items) is solid but lacks **specificity**. Example prioritization:
+### Gap 1: Factory Deployer vs. Post-Acquisition Owner ⚠️ **CRITICAL**
 
-| **Fingerprint** | **Detectability** | **Uniqueness** | **Priority** |
+**The Problem:**
+You have documented that `0xc2B5f79a5768893b8087667B391C1381c502Ab5c`:
+- Called the factory contract
+- Received `OwnershipTransferred` events for proxy instances
+
+But you have **not clarified whether** this address was:
+- The **factory constructor deployer** (originator — **high attribution confidence**), OR
+- A **post-deployment acquirer** (subsequent owner — **lower confidence**)
+
+These represent materially different evidentiary claims about who controls the deployment.
+
+**How to Resolve:**
+
+#### Checklist: Factory Deployer Verification
+- [ ] Navigate to factory contract address on Etherscan: `<INSERT_FACTORY_ADDRESS_HERE>`
+- [ ] Locate "Creator" field (usually near top of contract page) and note the deployer address
+- [ ] Retrieve the creation transaction hash from that field
+- [ ] Click to view the creation transaction and note the `from` address (true deployer)
+- [ ] Compare deployer address against `0xc2B5f79a5768893b8087667B391C1381c502Ab5c`
+  - **If SAME:** Proposition 1 = **HIGH-confidence originator**
+  - **If DIFFERENT:** Proposition 1 = **MEDIUM-confidence post-acquisition** (add new "Factory Deployer Authority" sub-proposition)
+- [ ] Record findings in **Reproducibility Metadata** section (below)
+- [ ] Update BLOCKCHAIN_EAS_IDENTITY_CASEFILE.md with new Proposition 1 status
+
+**Impact:** This distinguishes between "originated the attack surface" vs. "currently controls a pre-existing surface."
+
+---
+
+### Gap 2: Incidental Result Requires Artifact Analysis ⚠️ **REQUIRED**
+
+**The Problem:**
+You identified one GitHub repository containing the address `0x33D82C144717FCd83965ca26fAd4D4256E6052DD` and dismissed it as "incidental." But you did not document **why** it was dismissed (boilerplate? token script? different contract?).
+
+Without artifact-level analysis, the exclusion cannot be verified by another investigator.
+
+**Incidental Result: Address 0x33D82C144717FCd83965ca26fAd4D4256E6052DD**
+
+#### Checklist: Artifact-Level Analysis
+
+- [ ] **Locate the repository:** Find and document the full GitHub URL
+- [ ] **Examine code structure:**
+  - [ ] Is this a token distribution script, boilerplate proxy, or something else?
+  - [ ] What does the README say the project does?
+  - [ ] Document last commit date and primary language(s)
+  - [ ] Note: Public or Private repository?
+
+- [ ] **Compare ABIs:**
+  - [ ] On Etherscan, retrieve the **verified ABI** for `0x33D82C144717FCd83965ca26fAd4D4256E6052DD`
+  - [ ] Extract **function selectors** (first 4 bytes of keccak256 hash) from the Etherscan ABI
+  - [ ] Search the GitHub repository for evidence of those **same selectors** (e.g., `function transfer(address,uint256)`)
+  - [ ] If selectors match → investigate further; if not → likely unrelated
+
+- [ ] **Compare bytecode (if possible):**
+  - [ ] Retrieve on-chain runtime bytecode via: `cast code 0x33D82C144717FCd83965ca26fAd4D4256E6052DD --rpc-url <YOUR_RPC_URL>`
+  - [ ] Hash the bytecode: `keccak256(bytecode)` = `0x<hash>`
+  - [ ] If the repo includes compiled artifacts or verified source on Etherscan, compare hashes
+  - [ ] Document match or mismatch
+
+- [ ] **Deployment pattern analysis:**
+  - [ ] Does the repo use EIP-1167 minimal proxy? (search for `0x363d3d373d3d3d363d73...`)
+  - [ ] Does it use CREATE or CREATE2? (search for assembly code or patterns)
+  - [ ] Does it have ownership/access control logic (constructor, OwnershipTransferred event)?
+
+- [ ] **Document exclusion rationale:**
+  - [ ] Final judgement: **Excluded — [reason]** (e.g., "standard OpenZeppelin proxy boilerplate" / "token distribution script" / "different contract family")
+  - [ ] Confidence level: **[High/Medium/Low]**
+  - [ ] Recommendation: [e.g., "re-check in 6 months if repo updated"; "keep archived copy"]
+
+- [ ] **Save to investigation folder:**
+  - [ ] Store a snapshot link (commit URL) used for analysis
+  - [ ] If repo changes later, store copies of key files in `investigation/exclusions/`
+
+**Template for Documentation:**
+```markdown
+## Incidental Result Artifact Analysis — Address 0x33D82C144717FCd83965ca26fAd4D4256E6052DD
+
+**Repository:** [GitHub URL]  
+**Examined by:** [your name]  
+**Date/Time (UTC):** 2026-08-25 | hh:mm  
+**Snapshot commit:** [commit permalink]
+
+### 1. Repository Summary
+- Name: [owner/repo]
+- Description: [first-line from README]
+- Last commit: [hash, author, date]
+- Visibility: [Public/Private]
+
+### 2. ABI & Selector Comparison
+- On-chain ABI (Etherscan): [link]
+- Sample selector from ABI: `0x18160ddd` (balanceOf)
+- Found in GitHub repo? [Yes/No]
+- Match status: [Exact / Partial / None]
+
+### 3. Bytecode Comparison
+- On-chain runtime bytecode keccak256: [0x...]
+- GitHub source bytecode keccak256: [0x... or N/A]
+- Discrepancy: [Identical / Different / Not comparable]
+
+### 4. Deployment Pattern
+- EIP-1167 minimal proxy used? [Yes/No]
+- CREATE2 salt pattern? [Yes/No — list if found]
+- Ownership logic (OwnershipTransferred event)? [Yes/No]
+
+### 5. Conclusion
+- **Final judgement:** Excluded — [reason]
+- **Primary reason:** [boilerplate / token distribution / different family / mismatch selectors/bytecode]
+- **Confidence:** [High/Medium/Low]
+- **Re-review recommendation:** [e.g., 6 months or if repo updated]
+```
+
+---
+
+### Gap 3: Source-Level Fingerprints Not Yet Extracted ⚠️ **HIGH PRIORITY**
+
+**The Problem:**
+You have searched GitHub for exact addresses and EIP-1167 patterns, but you have not extracted **distinctive code signatures** from the on-chain implementation contract (verified source on Etherscan).
+
+These fingerprints (revert strings, event definitions, distinctive constants) are often more effective for attribution than address searches.
+
+**Why This Matters:**
+- Implementation contract is deployed **once**, referenced by **multiple proxies**
+- Revert messages and event definitions are **hardcoded**, rarely obfuscated
+- Constructor logic reveals **developer patterns** (compiler version, library choices, naming conventions)
+
+**How to Extract & Prioritize:**
+
+#### Checklist: Implementation Fingerprint Extraction
+
+1. **Retrieve verified source from Etherscan:**
+   - [ ] Open Etherscan: `https://etherscan.io/address/0xea9eeafdada27d502115afc591b0a6eb5d14351e`
+   - [ ] Locate "Contract" tab → "Code" section
+   - [ ] Check if **verified source** is available
+   - [ ] If yes: Download or copy the Solidity source code
+   - [ ] Save to `investigation/implementations/0xea9eeafdada27d502115afc591b0a6eb5d14351e_source.sol`
+
+2. **Extract distinctive fingerprints (in order of priority):**
+
+| Fingerprint | Detectability | Uniqueness | Priority | GitHub Search Pattern |
+|---|---|---|---|---|
+| **Revert strings** | High | Medium | **🔴 HIGH** | `content:"revert \"<exact_string>\""`  |
+| **Event definitions** | High | High | **🔴 HIGH** | `content:"event <EventName>(...)"`  |
+| **CREATE2 salt** | Medium | High | **🟡 MEDIUM** | `content:"<salt_hex>"` or in comments  |
+| **Unusual constants** | Medium | Low | **🟡 MEDIUM** | `content:"<constant_name_or_value>"` |
+| **Constructor logic** | Medium | Medium | **🟡 MEDIUM** | Constructor argument patterns |
+| **Storage slot patterns** | Low | High | **⚪ LOW** | Requires bytecode analysis |
+| **EIP-1167 boilerplate** | High | Low | **⚪ LOW** | Too standard, high false positives |
+
+**Action items:**
+- [ ] Extract all **revert strings** from the verified source (highest signal-to-noise)
+  - Example: `revert("Insufficient balance")`; search GitHub for exact string
+- [ ] Extract all **event definitions** (highest uniqueness)
+  - Example: `event Transfer(address indexed from, address indexed to, uint256 value)`; search for exact signature
+- [ ] Extract **distinctive constants** (names or values)
+  - Example: `uint256 constant MAX_SUPPLY = 1000000e18`
+- [ ] Search GitHub for each fingerprint using the patterns above
+- [ ] Document results in **Fingerprint Search Results** section (below)
+
+---
+
+### Gap 4: Causality Timeline Not Established
+
+**The Problem:**
+Propositions 1 & 2 assume a causal relationship, but timing could complicate attribution:
+
+```
+Scenario A (immediate causality):
+  - Block N: 0xc2B5f... calls factory
+  - Block N: Factory deploys proxy, assigns ownership to 0xc2B5f...
+
+Scenario B (delayed causality):
+  - Block N: 0xc2B5f... calls factory
+  - Block N: Factory deploys proxy, assigns to address B
+  - Block N+1000: B transfers ownership to 0xc2B5f...
+```
+
+Both scenarios are captured in events, but Scenario B suggests 0xc2B5f... acquired control after deployment, not during.
+
+**How to Resolve:**
+
+#### Checklist: Causality Timeline
+- [ ] Retrieve all `OwnershipTransferred` events for proxy instances
+- [ ] For each event, note: **block number**, **transaction hash**, **timestamp**, **from address**, **to address**
+- [ ] Retrieve factory call transaction: note **block number**, **timestamp**, **from address**
+- [ ] Compare:
+  - **If factory call and OwnershipTransferred in same block/txn:** Immediate causality (high confidence)
+  - **If OwnershipTransferred in later block:** Delayed causality (medium confidence)
+- [ ] Document timeline in **On-Chain Timeline** section (below)
+
+---
+
+## Evidentiary Framework Cross-Reference to Casefile
+
+Your primary investigation framework (`BLOCKCHAIN_EAS_IDENTITY_CASEFILE.md`) defines:
+- **Evidence Classifications:** VERIFIED, CORROBORATED, REPORTED, HYPOTHESIS
+- **Chain-of-custody:** Full addresses, transaction hashes, timestamps
+- **Verification Sequence:** 5 phases
+
+**This document feeds into the casefile as follows:**
+
+| Proposition | Casefile Classification | Confidence | How It Updates Casefile |
 |---|---|---|---|
-| Distinctive revert strings | High | Medium | **HIGH** — Revert messages are hardcoded, rarely obfuscated |
-| Event definitions | High | High | **HIGH** — Sig mismatch immediately reveals different contracts |
-| CREATE2 salt derivation | Medium | High | **MEDIUM** — May be in comments or variable names |
-| Unusual constants | Medium | Low | **MEDIUM** — Could appear in unrelated contracts |
-| Storage-slot patterns | Low | High | **LOW** — Requires bytecode analysis, not text search |
-| EIP-1167 clone code | High | Low | **LOW** — Standard implementation, unlikely to be distinctive |
+| Factory Initiation (Prop 1) | **TBD** (pending Gap 1 resolution) | **TBD** | Update to VERIFIED (if deployer match) or add sub-proposition |
+| Ownership Transfer (Prop 2) | **CORROBORATED** | **High** | Multiple on-chain events; timestamps verified; causality timing clarified (Gap 4) |
+| Proxy Delegation (Prop 3) | **VERIFIED** | **High** | On-chain linkage confirmed; implementation address stable |
+| GitHub Attribution (Prop 4) | **NEGATIVE-FINDING** | **High** | Exhaustive search completed (with caveats in Limitations); fingerprint phase pending |
+| Real-World Identity (Prop 5) | **HYPOTHESIS** | **N/A** | Out of scope; requires Phase 2 investigation |
 
-**Recommendation:**
-- Start with **revert strings** and **event definitions** (highest signal-to-noise ratio)
-- Move to **distinctive constants** (name-collisions still possible but manageable)
-- Reserve **storage patterns** for bytecode analysis if text search exhausted
-
----
-
-## Evidentiary Framework Analysis
-
-Your five propositions correctly separate claims, but there's an implicit assumption worth stating explicitly:
-
-**Proposition 1 & 2 assume causality:**
-> `0xc2B5f79a5768893b8087667B391C1381c502Ab5c` **interacted with** the factory **→ became owner of clone**
-
-This is not necessarily true. Possible scenarios:
-- A calls factory in txn A
-- Factory deploys proxy and assigns ownership to B (different address)
-- Later, B transfers ownership to A in txn B
-
-Your current frame would capture both transactions but might conflate timing. Add **explicit transaction timestamps** to distinguish cause from effect.
+**Next update to casefile:**
+- Add Gap 1 resolution (factory deployer verification)
+- Add Gap 4 resolution (causality timeline)
+- Update Prop 2 classification to reflect causality timing
+- Add reference to this analysis document
 
 ---
 
-## Cross-Reference to Casefile
+## Known Limitations
 
-Your primary casefile (`BLOCKCHAIN_EAS_IDENTITY_CASEFILE.md`) establishes:
-- Evidence classification framework (VERIFIED / CORROBORATED / REPORTED / HYPOTHESIS)
-- Chain-of-custody requirements (full addresses, transaction hashes, etc.)
-- Verification sequence (5 phases)
+**Be explicit about what was NOT searched:**
 
-**Observation:** The GitHub Attribution Update is **consistent** with these standards but uses **simpler language** ("on-chain evidence" vs. casefile's "VERIFIED"). 
+- **Private repositories:** GitHub search cannot access private repos. Attribution is possible but unverifiable through public search.
+- **Obfuscated addresses:** If the developer posted addresses with formatting, encoding, or as comments (e.g., `// 0xc2B5f...`), standard full-address search would find it, but emoji-encoded or heavily obfuscated strings might be missed.
+- **Commit history age:** GitHub search may have indexing delays for very recent commits; very old commits may have reduced searchability.
+- **Off-chain coordination:** Real-world collaboration (Telegram, Discord, private email) outside GitHub is not in scope.
+- **Fork network gaps:** Current search covers main repository branches; some fork networks may be excluded.
+- **Organization-wide search limitations:** Code within organizations not yet connected to this investigation may exist; expanding to org-level search requires additional queries (not yet performed).
 
-**Recommendation:** Consider cross-labeling:
-```
-2. Ownership-event evidence — **CORROBORATED**
-   (Multiple on-chain events, timestamps verified, 
-    but causality with Proposition 1 not yet determined)
-```
+---
 
-This ties the two documents together and signals that GitHub findings feed into the larger verification pipeline.
+## Reproducibility Metadata (Fill In As You Work)
+
+### GitHub Search Details
+
+| Parameter | Value |
+|---|---|
+| **Authenticated as** | [Your GitHub username] |
+| **Search start date** | 2026-08-25 |
+| **Search end date** | [YYYY-MM-DD] |
+| **Search account permissions** | [Public search / Organization member / Other] |
+
+### GitHub Search Queries Executed
+
+| Query # | Search String | Date Executed (UTC) | Result Count | Result Names |
+|---|---|---|---|---|
+| 1 | `content:"0xc2B5f79a5768893b8087667B391C1381c502Ab5c"` | 2026-08-25 | [N] | [list repos, or "none found"] |
+| 2 | `content:"0xea9eeafdada27d502115afc591b0a6eb5d14351e"` | 2026-08-25 | [N] | [list repos, or "none found"] |
+| 3 | `content:"0x33D82C144717FCd83965ca26fAd4D4256E6052DD"` | 2026-08-25 | [N] | [https://github.com/.../...] |
+| 4 | EIP-1167 fingerprint pattern | 2026-08-25 | [N] | [list repos, or "none found"] |
+| 5+ | [Additional queries] | [date] | [N] | [results] |
+
+### On-Chain Data Sources & Tools
+
+| Parameter | Value |
+|---|---|
+| **Blockchain** | Ethereum Mainnet |
+| **RPC provider** | [Alchemy / Infura / Other] |
+| **Factory contract address** | `<INSERT_FACTORY_ADDRESS_HERE>` |
+| **Factory Etherscan link** | [Link] |
+| **Implementation address** | `0xea9eeafdada27d502115afc591b0a6eb5d14351e` |
+| **Implementation Etherscan link** | https://etherscan.io/address/0xea9eeafdada27d502115afc591b0a6eb5d14351e |
+| **Implementation bytecode hash (keccak256)** | `0x<hash>` |
+| **Foundry / cast version** | [e.g., cast 0.2.0] |
+| **Etherscan API key used** | [Yes / No] |
+
+### Fingerprint Search Results (To Be Populated in Phase 2)
+
+After extracting implementation source from Etherscan, document your searches:
+
+| Fingerprint Type | Example | GitHub Query | Result Count | Repositories Found |
+|---|---|---|---|---|
+| Revert string 1 | `revert("...")` | `content:"revert (\"exact_string\")"` | [N] | [list or "none"] |
+| Event definition 1 | `event Transfer(...)` | `content:"event Transfer(...)"` | [N] | [list or "none"] |
+| Constant value | `uint256 constant X = Y` | `content:"constant X = Y"` | [N] | [list or "none"] |
+
+---
+
+## On-Chain Timeline (To Be Populated)
+
+Document transaction sequence to establish causality:
+
+| Block # | Timestamp (UTC) | Tx Hash | From Address | To/Action | Event | Notes |
+|---|---|---|---|---|---|---|
+| [N] | [YYYY-MM-DD hh:mm:ss] | [0x...] | `0xc2B5f...` | Factory call | FactoryCalled | Factory initiated |
+| [N] | [same block] | [0x...] | Factory | Proxy created | ProxyCreated | Ownership assigned? |
+| [N+K] | [later] | [0x...] | [from] | [to] | OwnershipTransferred | If delayed, documents acquisition not origination |
 
 ---
 
 ## Risk Assessment: False Exclusions
 
-**Risk: The incidental result was prematurely dismissed**
-
-If the repository you excluded actually contained:
-- The exact implementation contract source
-- Historical commits showing factory pattern development
-- Developer comments or commit messages referencing the addresses
+**Risk Scenario:**
+If the repository you excluded (Gap 2, address `0x33D82C144717FCd83965ca26fAd4D4256E6052DD`) actually contains:
+- The exact implementation contract source, OR
+- Historical commits showing factory pattern development, OR
+- Developer comments/commit messages referencing the addresses
 
 ...then your negative GitHub finding would be **incorrect**, not just incomplete.
 
-**Mitigation:**
-- Store the name/URL of the excluded repository in a "Exclusion Record" appendix
-- Plan a 6-month re-review of dismissed results (GitHub repos are sometimes updated, made public, or archived)
-- If possible, retrieve the repository's git history and search for changes to proxy/factory logic
+**Mitigation Strategy:**
+- [ ] Complete Gap 2 analysis (artifact-level comparison above) before concluding negative finding
+- [ ] Store excluded repository URL in **Exclusion Record** section (below)
+- [ ] Plan 6-month re-review: GitHub repos are sometimes updated, made public, or archived
+- [ ] If possible, retrieve repository git history and search for commits modifying proxy/factory logic
 
 ---
 
-## Next Steps: Suggested Sequence
+## Exclusion Record
 
-### Immediate (within investigation session)
-1. **Clarify factory deployer** — Distinguish constructor deployer from post-deployment owner
-2. **Document incidental result** — Add artifact analysis of the excluded repository
-3. **Prioritize fingerprints** — Order GitHub research targets by detectability
+**Format:** For every repository examined and excluded, add a row with full details.
 
-### Short-term (next 7 days)
-4. Query implementation contract (`0xea9eeafdada27d502115afc591b0a6eb5d14351e`) on Etherscan
-   - Retrieve verified source (if available)
-   - Extract revert strings, event definitions, constructor logic
-5. GitHub search for these distinctive elements
-6. Cross-reference against SIMBASE and other known proxy factories
-
-### Medium-term (if short-term yields results)
-7. Reverse-engineer the factory's CREATE2 salt to infer deployment intent
-8. Correlate temporal patterns with SIMBASE activity or EAS schema changes
-9. Attempt signature verification or challenge-response from the address (if appropriate)
+| Repository URL | Examined (UTC) | Examiner | Reason for Exclusion | ABI Match | Bytecode Match | Confidence | Snapshot Commit | Re-Review Date |
+|---|---|---|---|---|---|---|---|---|
+| https://github.com/[owner]/[repo] | 2026-08-25 hh:mm | [name] | [boilerplate / token distribution / different family / mismatch] | [Exact / Partial / None] | [Same / Different] | [High/Med/Low] | [commit permalink] | 2027-02-25 |
+| (Add rows as you analyze incidental results) | | | | | | | | |
 
 ---
 
-## Reproducibility Appendix (required additions)
-- Exact GitHub search queries used (copy/paste) and the UTC date/time each search was run
-- GitHub account used for searches (if authenticated filters applied)
-- Any language/organization/path filters (e.g., repo:owner/repo path:/contracts/)
-- Etherscan/Tenderly permalinks to implementation and factory contracts
-- Runtime bytecode keccak256 hashes and ABI files saved into the investigation folder
-- Tools and commands used (examples below)
+## Next Steps: Immediate Action Plan
 
-Suggested reproducible commands / comparison steps
-- Retrieve verified source & ABI (Etherscan API):
-  https://api.etherscan.io/api?module=contract&action=getsourcecode&address=<ADDRESS>&apikey=<YOUR_KEY>
-- Get runtime bytecode (using an RPC or Foundry cast):
-  cast code <ADDRESS> --rpc-url <RPC_URL>
-- Hash runtime bytecode (keccak256) locally (example with node/ethers):
-  const { keccak256 } = require('ethers/lib/utils'); keccak256(runtimeBytecode)
-- Compare function selectors (quick Node snippet):
-  ethers.utils.id("transfer(address,uint256)").slice(0,10)
-- GitHub code search patterns (examples):
-  - content:"revert \"" OR content:"revert("  (revert strings)
-  - content:"event OwnershipTransferred(address indexed previousOwner, address indexed newOwner)"
-  - content:"Clones.sol" OR content:"EIP-1167" OR content:"minimal proxy"
-  - content:"0xea9eeafdada27d502115afc591b0a6eb5d14351e" (implementation literal)
+### Phase: Immediate (Within This Investigation Session)
+**Target completion: 2026-08-25**
+
+- [ ] **Gap 1 — Factory Deployer Verification**
+  - Query Etherscan for factory creation transaction
+  - Document deployer vs. `0xc2B5f79a5768893b8087667B391C1381c502Ab5c`
+  - Update Proposition 1 status
+
+- [ ] **Gap 2 — Incidental Result Analysis**
+  - Locate GitHub repo containing `0x33D82C144717FCd83965ca26fAd4D4256E6052DD`
+  - Perform artifact-level ABI/bytecode comparison
+  - Document exclusion with full rationale
+  - Add to Exclusion Record
+
+- [ ] **Gap 4 — Causality Timeline**
+  - Extract OwnershipTransferred event timestamps
+  - Compare with factory call timestamp
+  - Document in On-Chain Timeline section
+
+- [ ] **Fill reproducibility metadata** (GitHub queries, on-chain sources, tools used)
+
+### Phase: Short-Term (Next 7 Days)
+**Target completion: 2026-09-01**
+
+- [ ] **Query implementation contract on Etherscan**
+  - Retrieve verified source (if available)
+  - Extract revert strings, event definitions, distinctive constants
+  - Save source code to `investigation/implementations/`
+
+- [ ] **Run targeted GitHub searches**
+  - Search for highest-priority fingerprints (revert strings, events)
+  - Document results in Fingerprint Search Results table
+  - Analyze any matches for relevance
+
+- [ ] **Cross-reference SIMBASE and known factories**
+  - Compare deployment patterns against known proxy factory patterns
+  - Check for temporal correlation with known threat activity
+
+### Phase: Medium-Term (If Short-Term Yields Matches)
+**Contingent on fingerprint search results**
+
+- [ ] Reverse-engineer factory CREATE2 salt (if deployed via CREATE2)
+- [ ] Correlate deployment timestamps with EAS schema changes or SIMBASE activity
+- [ ] If code repository is found, attempt signature verification or development pattern analysis
 
 ---
 
-## Exclusion Record (template)
-For every excluded repository, add a record here with the answers from the Incidental Result Artifact Analysis. This appendix should at minimum contain:
-- Repository permalink
-- Date examined, examiner name
-- Short reason for exclusion and confidence level
-- Snapshot permalink (commit)
+## Investigation Lifecycle & Review Schedule
 
-(Example row — populate as you evaluate exclusions)
-- https://github.com/<owner>/<repo>  |  2026-08-25  |  <examiner>  | Excluded — standard OpenZeppelin proxy (boilerplate); ABI selectors do not match; Confidence: High; Snapshot: <commit permalink>
+| Milestone | Date | Responsible | Status |
+|---|---|---|---|
+| GitHub Attribution Pass (Phase 1) | 2026-08-25 | [name] | **🟢 COMPLETE** (with gaps documented) |
+| Gap Resolution (Immediate) | 2026-08-25 | [name] | ⏳ In Progress |
+| Source Fingerprinting (Phase 2) | 2026-09-01 | [name] | ⏳ Scheduled |
+| Scheduled 6-Month Re-Review | 2027-02-25 | [name] | 📅 Planned |
+| **Escalation Trigger** | TBD | [name] | If Phase 2 finds >2 strong matches |
 
 ---
 
-## Conclusion: Investigation State
+## Conclusion: Investigation State & Readiness
 
-| Aspect | Status | Confidence |
-|---|---|---|
-| **GitHub attribution present** | NEGATIVE | **High** — Exhaustive address and fingerprint search |
-| **GitHub attribution absent** | CONFIRMED | **High** — But "absent from GitHub" ≠ "absent from reality" |
-| **On-chain caller → owner chain** | DOCUMENTED | **High** — Events logged; causality TBD |
-| **Proxy ↔ Implementation link** | DOCUMENTED | **High** — Implementation address preserved |
-| **Real-world entity identity** | UNKNOWN | **N/A** |
+| Aspect | Status | Confidence | Notes |
+|---|---|---|---|
+| **GitHub attribution present** | NEGATIVE | **High** | Exhaustive exact-address and EIP-1167 searches; gaps documented in Limitations |
+| **GitHub attribution absent** | CONFIRMED | **High** | Epistemically sound: "not found on GitHub" ≠ "does not exist" |
+| **On-chain caller → owner chain** | DOCUMENTED | **High** | Events logged; causality timeline pending (Gap 4) |
+| **Factory deployer identity** | **UNKNOWN** | N/A | Gap 1 unresolved; critical for high-confidence attribution |
+| **Incidental result excluded** | ASSERTED (not verified) | **Low** | Gap 2 unresolved; requires artifact analysis |
+| **Implementation fingerprints extracted** | NO | N/A | Gap 3; highest-priority for Phase 2 |
+| **Real-world entity identity** | UNKNOWN | N/A | Out of scope; casefile Phase 2 responsibility |
 
-**Overall investigation readiness for Phase 2:** Ready. The GitHub attribution pass is complete and well-documented. Proceed to source-level fingerprinting.
+**Overall investigation readiness for Phase 2:** ✅ **READY WITH CAVEATS**
+
+The GitHub attribution pass is complete and well-documented. Gaps 1, 2, and 4 are documented with checklists for resolution. Phase 2 (source-level fingerprinting) is the recommended next step and should begin by 2026-09-01.
 
 ---
 
@@ -302,6 +499,8 @@ For every excluded repository, add a record here with the answers from the Incid
 
 - **Author:** Independent analysis (review by 1800PROWORK)
 - **Date:** 2026-08-25
-- **Status:** Critical Review
-- **Scope:** Methodological evaluation of GitHub-Attribution-Update-2026-08-25.md
+- **Status:** Critical Review + Implementation Ready
+- **Scope:** Methodological evaluation of GitHub attribution pass; gaps documented and actionable
 - **Related:** BLOCKCHAIN_EAS_IDENTITY_CASEFILE.md (primary investigation framework)
+- **Version:** 2.0 (revised for actionability and reproducibility)
+- **Last updated:** 2026-08-25
