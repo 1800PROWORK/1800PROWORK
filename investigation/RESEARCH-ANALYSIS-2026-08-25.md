@@ -5,19 +5,22 @@
 
 ---
 
+## Executive Summary
+- Finding: The GitHub attribution pass returned no high-confidence public repository mapping to the on-chain implementation (implementation: `0xea9eeafdada27d502115afc591b0a6eb5d14351e`).
+- Confidence: High for the exact-address and EIP-1167 fingerprint searches that were run; however, an incidental GitHub hit was dismissed without an artifact-level comparison. That omission prevents final closure of the exclusion.
+- Immediate next action: Perform the implementation-source fingerprint extraction on Etherscan, export ABI/selectors and revert strings, then run targeted GitHub searches for those fingerprints (owner: <name>, due: <date>). See "Next Steps" and "Reproducibility Appendix".
+
+---
+
 ## Executive Assessment
 
 Your investigation establishes a **defensible negative GitHub finding** but operates in tension with three unresolved interpretive questions:
 
-1. **Absence vs. Non-Public:** Your GitHub search was exhaustive for exact-match addresses and the EIP-1167 fingerprint. But GitHub may host related code under organization names, obfuscated repositories, or private accounts with public forks. Negative GitHub findings are **not transitive** to non-public code sources.
+1. **Absence vs. Non-Public:** Your GitHub search was exhaustive for exact-match addresses and the EIP-1167 fingerprint. But GitHub may host related code under organization names, obfuscated repositories, forks, or private/archived repositories not returned by a public search. See Reproducibility Appendix for exact queries and the search timeframe.
 
-2. **Factory Chain Clarity:** The documented on-chain relationships (factory interaction → ownership transfer → proxy instance) establish **event-level evidence** but leave unresolved whether `0xc2B5f79a5768893b8087667B391C1381c502Ab5c` **initiated** the factory deployment or merely became owner **post-deployment** via explicit transfer. This distinction matters for attribution.
+2. **Factory Chain Clarity:** The documented on-chain relationships (factory interaction → ownership transfer → proxy instance) establish **event-level evidence** but leave unresolved whether the factory caller was the constructor deployer or a subsequent owner (see Gap 1 and the recommended verification steps below).
 
-3. **Incidental Result Exclusion:** The single GitHub hit (`0x33D82C144717FCd83965ca26fAd4D4256E6052DD`) was dismissed on the grounds of insufficient nexus. But you did not report whether that repository contained:
-   - Identical Solidity bytecode
-   - Matching ABI structure
-   - Similar deployment patterns
-   - Commented-out or stub implementations of the proxy logic
+3. **Incidental Result Exclusion:** The single GitHub hit (`0x33D82C144717FCd83965ca26fAd4D4256E6052DD`) was dismissed on the grounds of insufficient nexus. The report did not include an artifact-level comparison (ABI selectors, bytecode hash, deployment pattern, or source comments) that justifies exclusion. See the new "Incidental Result Artifact Analysis" subsection and the Exclusion Record appendix.
 
 **Without artifact-level comparison,** the exclusion remains logical but incomplete.
 
@@ -47,7 +50,7 @@ The deployment structure is clearly documented:
 Caller → Factory → Proxy Instance → Implementation
 ```
 
-This follows the actual EIP-1167 pattern. Your preservation of the implementation reference address (`0xea9eeafdada27d502115afc591b0a6eb5d14351e`) is critical—it's the most stable identifier across multiple proxies if they share the same logic.
+This follows the actual EIP-1167 pattern. Your preservation of the implementation reference address (`0xea9eeafdada27d502115afc591b0a6eb5d14351e`) is critical — it's the most stable identifier across proxy instances and should be prioritized for source-level fingerprinting.
 
 ---
 
@@ -64,11 +67,11 @@ This follows the actual EIP-1167 pattern. Your preservation of the implementatio
 - Or did `0xc2B5f79a5768893b8087667B391C1381c502Ab5c` **acquire ownership post-deployment** (lower attribution confidence)?
 
 **Recommendation:**
-- Query the factory contract's `constructor()` logs and initialization state
+- Query the factory contract's deployment transaction and constructor initialization (deployer address and tx hash)
 - Compare the factory deployer address against `0xc2B5f79a5768893b8087667B391C1381c502Ab5c`
-- If different, add a distinct "Factory Deployment Authority" proposition
+- If different, add a distinct "Factory Deployment Authority" proposition to the investigation
 
-**Impact on investigation:** This clarifies whether `0xc2B5f79a5768893b8087667B391C1381c502Ab5c` is an **originator** or a **subsequent acquirer** of control—materially different for real-world attribution.
+**Impact on investigation:** This clarifies whether `0xc2B5f79a5768893b8087667B391C1381c502Ab5c` is an **originator** or a **subsequent acquirer** of control — materially different for real-world attribution and investigative next steps.
 
 ---
 
@@ -85,17 +88,49 @@ You did not report what made the exclusion definitive. Was the repository:
 - Or did you not examine the repository contents?
 
 **Recommendation:**
-Add a subsection: **"Incidental Result Artifact Analysis"**
-```
-Repository: [URL]
-Content summary: [What did you find?]
-ABI comparison: [Did selectors match?]
-Bytecode comparison: [Any signature overlap?]
-Deployment pattern: [Same or different?]
-Conclusion: [Why excluded]
-```
+Add the subsection below: **"Incidental Result Artifact Analysis"** and populate it for each dismissed repository. This converts an assertion into reproducible analysis.
 
-**Impact:** This converts an assertion into reproducible analysis. Another investigator should be able to verify your exclusion.
+```text
+Incidental Result Artifact Analysis
+Repository: <full repository permalink>
+Inspected by: <name>  Date: <YYYY-MM-DD>  Time (UTC): <hh:mm>
+
+1) Repo summary
+   - Repo name: <owner/repo>
+   - Description: <first-line description from repo>
+   - Last commit: <commit hash, author, date>
+   - Public/Private: <public|private>
+
+2) Files examined (permalink + reason)
+   - <path/file.sol> — <permalink#Lx-Ly> — contains proxy/factory code?
+   - <path/README.md> — <permalink#Lx-Ly> — developer comments?
+
+3) ABI / function selector comparison
+   - Etherscan ABI (repo claim): <link>
+   - ABI selectors present in repo: [list of selectors, e.g., 0x18160ddd owner()]
+   - Match status: [Exact / Partial / None]
+   - Notes: <explain any partial matches or differences>
+
+4) Bytecode/runtime comparison
+   - On-chain runtime bytecode keccak256: <0x...> (from RPC or etherscan)
+   - Local/compiled runtime bytecode keccak256: <0x...> (if repo includes compiled artifacts or verified source)
+   - Discrepancy summary: <same/different; explain offsets/comments/immutable args>
+
+5) Deployment pattern / factory usage
+   - Evidence the repo uses EIP-1167 or clones? (Yes/No)
+   - CREATE/CREATE2 patterns found? (Yes/No — include code lines)
+   - Ownership flow present in code? (constructor, OwnershipTransferred event, setter functions)
+
+6) Conclusion & rationale for exclusion
+   - Final judgement: [Excluded — reason short]
+   - Primary reason(s): [boilerplate, token distribution, different contract family, mismatch on selectors/bytecode]
+   - Confidence: [High/Medium/Low]
+   - Recommendation: [e.g., re-check in N months, keep archived copy]
+
+7) Archive/attachment
+   - Snapshot permalink (commit used for analysis): <commit permalink>
+   - If repo later changes, store a copy of relevant files in the investigation folder.
+```
 
 ---
 
@@ -209,6 +244,43 @@ If the repository you excluded actually contained:
 7. Reverse-engineer the factory's CREATE2 salt to infer deployment intent
 8. Correlate temporal patterns with SIMBASE activity or EAS schema changes
 9. Attempt signature verification or challenge-response from the address (if appropriate)
+
+---
+
+## Reproducibility Appendix (required additions)
+- Exact GitHub search queries used (copy/paste) and the UTC date/time each search was run
+- GitHub account used for searches (if authenticated filters applied)
+- Any language/organization/path filters (e.g., repo:owner/repo path:/contracts/)
+- Etherscan/Tenderly permalinks to implementation and factory contracts
+- Runtime bytecode keccak256 hashes and ABI files saved into the investigation folder
+- Tools and commands used (examples below)
+
+Suggested reproducible commands / comparison steps
+- Retrieve verified source & ABI (Etherscan API):
+  https://api.etherscan.io/api?module=contract&action=getsourcecode&address=<ADDRESS>&apikey=<YOUR_KEY>
+- Get runtime bytecode (using an RPC or Foundry cast):
+  cast code <ADDRESS> --rpc-url <RPC_URL>
+- Hash runtime bytecode (keccak256) locally (example with node/ethers):
+  const { keccak256 } = require('ethers/lib/utils'); keccak256(runtimeBytecode)
+- Compare function selectors (quick Node snippet):
+  ethers.utils.id("transfer(address,uint256)").slice(0,10)
+- GitHub code search patterns (examples):
+  - content:"revert \"" OR content:"revert("  (revert strings)
+  - content:"event OwnershipTransferred(address indexed previousOwner, address indexed newOwner)"
+  - content:"Clones.sol" OR content:"EIP-1167" OR content:"minimal proxy"
+  - content:"0xea9eeafdada27d502115afc591b0a6eb5d14351e" (implementation literal)
+
+---
+
+## Exclusion Record (template)
+For every excluded repository, add a record here with the answers from the Incidental Result Artifact Analysis. This appendix should at minimum contain:
+- Repository permalink
+- Date examined, examiner name
+- Short reason for exclusion and confidence level
+- Snapshot permalink (commit)
+
+(Example row — populate as you evaluate exclusions)
+- https://github.com/<owner>/<repo>  |  2026-08-25  |  <examiner>  | Excluded — standard OpenZeppelin proxy (boilerplate); ABI selectors do not match; Confidence: High; Snapshot: <commit permalink>
 
 ---
 
