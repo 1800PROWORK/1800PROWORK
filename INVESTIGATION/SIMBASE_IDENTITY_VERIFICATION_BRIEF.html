@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SIMBASE / SimBase Identity & GasSaver Verification Brief</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --paper: #f7f7f7;
+      --ink: #131722;
+      --muted: #555d6d;
+      --line: #d7dce3;
+      --accent: #1f5aa6;
+      --warn: #8a5b00;
+      --good: #1b5e20;
+      --bad: #7a1d1d;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.5;
+    }
+
+    body {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 32px 24px 64px;
+    }
+
+    h1, h2, h3 {
+      page-break-after: avoid;
+      color: var(--ink);
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-bottom: 8px;
+      border-bottom: 2px solid var(--line);
+      padding-bottom: 10px;
+    }
+
+    h2 {
+      font-size: 22px;
+      margin-top: 28px;
+      color: var(--accent);
+    }
+
+    h3 {
+      font-size: 18px;
+      margin-top: 20px;
+    }
+
+    p, li {
+      font-size: 14px;
+      color: var(--ink);
+    }
+
+    ul, ol {
+      padding-left: 20px;
+    }
+
+    .meta {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      padding: 12px 14px;
+      border-radius: 6px;
+      margin: 18px 0;
+    }
+
+    .status-box {
+      border-left: 5px solid var(--accent);
+      background: #eef5ff;
+      padding: 12px 14px;
+      margin: 18px 0;
+    }
+
+    .warn-box {
+      border-left: 5px solid var(--warn);
+      background: #fff7e8;
+      padding: 12px 14px;
+      margin: 18px 0;
+    }
+
+    .good-box {
+      border-left: 5px solid var(--good);
+      background: #edf8ee;
+      padding: 12px 14px;
+      margin: 18px 0;
+    }
+
+    code, pre {
+      font-family: Consolas, Monaco, monospace;
+      font-size: 12px;
+      background: #f4f6f8;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+    }
+
+    code {
+      padding: 2px 6px;
+    }
+
+    pre {
+      overflow: auto;
+      padding: 12px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      page-break-inside: avoid;
+    }
+
+    th, td {
+      border: 1px solid var(--line);
+      padding: 8px 10px;
+      text-align: left;
+      vertical-align: top;
+      font-size: 13px;
+    }
+
+    th {
+      background: #f0f3f7;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .section-label {
+      display: inline-block;
+      margin-top: 12px;
+      font-size: 12px;
+      font-weight: bold;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    @media print {
+      body {
+        max-width: 100%;
+        padding: 0;
+        margin: 0;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>SIMBASE / SimBase Identity & GasSaver Verification Brief</h1>
+
+  <div class="meta">
+    <strong>Prepared from:</strong> repository investigation materials and evidence records in the repo.<br />
+    <strong>Current conclusion:</strong> Provisional correlation only; not confirmed proof of identity or ownership.
+  </div>
+
+  <div class="status-box">
+    <strong>Executive summary:</strong> The repo contains meaningful blockchain evidence for SIMBASE / SimBase and a candidate gasSaver hash test, but it does not yet establish a verified identity or ownership claim. The strongest evidence is address association and funding/liquidity flow, not proven control.
+  </div>
+
+  <h2>1. Current Status</h2>
+
+  <h3>Verified facts</h3>
+  <ul>
+    <li>The Base contract address <code>0x1e4d2113D8E304122f2ceAA20B194d7801a84984</code> is publicly associated with SIMBASE / SIMBA.</li>
+    <li>Coinbase market data identifies the contract as SIMBASE on Base.</li>
+    <li>The investigation files document a funding/liquidity path associated with SIMBASE activity.</li>
+    <li>The repo explicitly states that observation and collection tools do not establish wallet ownership.</li>
+  </ul>
+
+  <div class="warn-box">
+    <strong>Important:</strong> Public asset identification and transaction activity are not the same thing as identity proof. The repo repeatedly reinforces this distinction.
+  </div>
+
+  <h3>Not yet proven</h3>
+  <ul>
+    <li>Identity of the SIMBASE deployer or controller.</li>
+    <li>Common ownership between the SIMBASE path and the broader investigation targets.</li>
+    <li>The candidate `gasSaver()` hash match against a real verified address.</li>
+    <li>Any direct relationship between SIMBASE activity and the subject of the broader investigation.</li>
+  </ul>
+
+  <h2>2. Key Repository Findings</h2>
+
+  <p>The repo’s investigation files are consistent in one key point: they treat token identity and transaction activity as evidence candidates, not final ownership proof.</p>
+
+  <p>Relevant files in the repo include:</p>
+  <ul>
+    <li><code>INVESTIGATION/CASE_INDEX.md</code></li>
+    <li><code>INVESTIGATION/SIMBASE_ADDRESS_EVIDENCE.md</code></li>
+    <li><code>INVESTIGATION/EVIDENCE/SIMBASE_HASH_CHECK.md</code></li>
+    <li><code>INVESTIGATION/EVIDENCE/SIMBASE_CONTRACT_0x1e4d2113.md</code></li>
+    <li><code>INVESTIGATION/EVIDENCE/BASE_SIMBASE_0x1e4d2113.md</code></li>
+    <li><code>INVESTIGATION/EVIDENCE/BASE_SIMBASE_ADDRESS.md</code></li>
+    <li><code>INVESTIGATION/EVIDENCE/BASE_SIMBASE_0xCE8820_CURRENT_2026-10-01.md</code></li>
+  </ul>
+
+  <h2>3. SIMBASE / SimBase Contract Identity</h2>
+
+  <p><strong>Address:</strong> <code>0x1e4d2113D8E304122f2ceAA20B194d7801a84984</code></p>
+
+  <p>The repo states that Coinbase public market data identifies this as the SIMBASE / SIMBA Base contract. That is meaningful because it gives a concrete, public blockchain identity to the token address.</p>
+
+  <p>However, the repo also states plainly that:</p>
+  <ul>
+    <li>asset identification does not prove deployer identity;</li>
+    <li>market association does not prove ownership;</li>
+    <li>contract identity does not prove control or linkage to the broader investigation.</li>
+  </ul>
+
+  <h2>4. Funding and Liquidity Evidence</h2>
+
+  <p>The investigation record describes a flow where a wallet connected to the SIMBASE creator path received 15 WETH and then created and removed SIMBASE liquidity. This is relevant evidence because it ties a transaction path to token activity and pool creation.</p>
+
+  <p>That evidence supports a transaction-level correlation, but not a proof of ownership or identity. A funding path and liquidity event are not equivalent to proving the actor behind the wallet.</p>
+
+  <h2>5. GasSaver Candidate Hash Test</h2>
+
+  <pre>address a0 = msg.sender;
+uint256 n0 = 100;
+bytes memory bb = abi.encode(a0, n0);
+if (keccak256(bb) == 0x5c53c7d6ea38ad0e745b72557f2752b0d8873a30c040b4f665725c033b82a3a1) {
+    // ...
+}</pre>
+
+  <p>The repo records that this target hash has not been reproduced from a verified address. In other words, the candidate pattern remains <strong>unproven</strong>.</p>
+
+  <div class="warn-box">
+    <strong>Current gasSaver status:</strong> Candidate-only; not verified and not accepted as identity proof.
+  </div>
+
+  <h2>6. Proof Requirement Standard</h2>
+
+  <p>The repository has established the correct standard for proof. Before claiming identity or ownership, it requires primary-chain confirmation:</p>
+
+  <ol>
+    <li>Recover the full deployer/creator address.</li>
+    <li>Identify the exact deployment transaction and block.</li>
+    <li>Trace the funding source of the deployer.</li>
+    <li>Map the candidate wallet against the relevant transaction graph.</li>
+    <li>Recompute <code>keccak256(abi.encode(candidateAddress, 100))</code> for each relevant address.</li>
+    <li>Compare the result to the supplied target hash.</li>
+    <li>Verify the contract code / runtime function signatures for any gasSaver-like implementation.</li>
+    <li>Only then treat linkage as evidence.</li>
+  </ol>
+
+  <h2>7. Required Proof Checklist</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Complete SIMBASE deployer address recovered</td>
+        <td>Pending</td>
+      </tr>
+      <tr>
+        <td>Creation transaction and block captured</td>
+        <td>Pending</td>
+      </tr>
+      <tr>
+        <td>Funding path documented</td>
+        <td>Partial</td>
+      </tr>
+      <tr>
+        <td>Wallet cluster mapped</td>
+        <td>Partial</td>
+      </tr>
+      <tr>
+        <td>Exact hash reproduced</td>
+        <td>Not proven</td>
+      </tr>
+      <tr>
+        <td>gasSaver function verified in contract/runtime code</td>
+        <td>Not proven</td>
+      </tr>
+      <tr>
+        <td>Ownership or common-control link established</td>
+        <td>Not proven</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>8. Conclusion</h2>
+
+  <div class="good-box">
+    <strong>Current evidence posture:</strong> This repo supports a cautious, evidence-based position: SIMBASE is a real Base token association, and there are transaction/liquidity correlations, but no verified proof of identity or ownership has yet been established.
+  </div>
+
+  <p><strong>Recommended status label:</strong> <code>PROVISIONAL CORRELATION — NOT IDENTITY PROOF</code></p>
+
+  <p>Any final claim about identity, ownership, or human control should wait for direct primary-chain verification of deployer address, transaction provenance, funding path, and exact hash reproduction.</p>
+
+  <h3>Practical recommendation</h3>
+  <p>Use this material as an investigation foothold, not as a final finding. The repo itself is structured around this distinction and is appropriately conservative.</p>
+
+  <p class="muted">Prepared for print-to-PDF use. Open in browser and choose Print → Save as PDF.</p>
+</body>
+</html>
+
