@@ -93,3 +93,18 @@ The creator and renunciation sender, `0xAEce168F44DbE83517f9161b394Dfca7AE63846c
 ## Important address distinction
 
 This record concerns `0xcE8820F5F6d4bE63Ed171f09a0b48571FFFB014D`. The repository also contains earlier evidence records for `0x1e4d2113D8E304122f2ceAA20B194d7801a84984`. Those records should not be silently conflated. Any relationship between the two contracts requires a separate transaction-level comparison.
+
+## Historical gasSaver caller scan
+
+The verified source declares `gasSaver(uint256)`, whose canonical function selector is `0xa91e5e21`. The complete Base Blockscout transaction history for this contract was paged and inspected.
+
+- Total contract transactions examined: `43`
+- Direct calls beginning with selector `0xa91e5e21`: `0`
+- Observed successful gasSaver executions: `0`
+- Observed gasSaver storage writes: `0`
+
+This establishes no observed historical direct use in the contract's current transaction history. It does not prove that the function is unreachable in the future, nor does it rule out a call attempt that reverted or an indirect execution path. The verified source shows no fallback or delegatecall path that would obviously route an unrelated selector into `gasSaver`; that point should still be preserved as a source-level observation, not an identity conclusion.
+
+The function is externally callable in source and is not protected by `onlyOwner`, but its branch executes only if `msg.sender` and the fixed `n0 = 100` produce the hard-coded Keccak-256 value. No caller satisfying that gate was found in the 43-transaction scan.
+
+Scan method: Base Blockscout `/api/v2/addresses/{contract}/transactions`, all returned pages, matching raw calldata against `0xa91e5e21`.
