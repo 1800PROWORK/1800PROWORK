@@ -48,3 +48,31 @@ Verified examples:
 ### Assessment
 
 The evidence raises the priority of `0xf2B1...EDB17D` as a funding/counterparty node, but does not yet justify attributing it to a named person, project, exchange, or organization. The strongest next test is temporal correlation: compare the source wallet's inbound funding immediately before each transfer to `0x5E1c`, then compare downstream destinations after those transfers. Reciprocal transfers between the two wallets would materially strengthen the relationship; shared upstream exchange/bridge sources would be a weaker but useful correlation.
+
+
+## Finding 5 — Reciprocal flow between funding-source node and a second EOA
+
+A second Polygon EOA, `0x469CA19C1a83AdaB2E25bAE229A87510F193aA69`, has a repeated reciprocal relationship with `0xf2B1...EDB17D`.
+
+Verified examples:
+- 2024-11-25: `0xf2B1...` sent 0.11316 USDT0 to `0x469C...`.
+- 2024-11-30: `0xf2B1...` sent 1.221655676108120095 POL to `0x469C...`.
+- 2024-12-15: `0xf2B1...` sent 10,000,000 RCKT to `0x469C...`.
+- 2024-12-20: `0xf2B1...` sent 0.108869177570120063 POL to `0x469C...`.
+- 2024-12-25: `0x469C...` sent 0.15262806448535723 POL back to `0xf2B1...`.
+- 2025-01-30: `0xf2B1...` sent 0.119628631603060858 POL to `0x469C...`.
+- 2025-11-17: `0xf2B1...` sent 0.066349819642894428 POL to `0x469C...`.
+
+This is stronger than a one-off transfer because the relationship is bidirectional and persists across months. It still does not prove that the two EOAs share an owner.
+
+## Finding 6 — Current graph shape
+
+The verified graph now has:
+
+`0x469C...A69 <-> 0xf2B1...B17D -> 0x5E1c...D6DA`
+
+The `0xf2B1 -> 0x5E1c` leg is directly verified on multiple dates in November/December 2024. The `0x469C <-> 0xf2B1` leg is independently verified through multiple POL and token transfers. This makes `0x469C` a priority second-hop node for funding-source and ownership analysis.
+
+### Caution
+
+The amounts are generally small. Therefore the relationship is currently best characterized as a **persistent operational/transactional cluster**, not evidence of financial control or common ownership.
