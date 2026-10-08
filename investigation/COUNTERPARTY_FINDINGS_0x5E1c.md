@@ -35,3 +35,16 @@ The strongest new lead is `0xf2B1...EDB17D` because it is a repeated direct EOA-
 ## Evidence standard
 
 No person, company, project, Telegram channel, or exchange is attributed to either wallet without independent evidence. Transactional proximity is recorded separately from ownership/control.
+
+## Follow-up tracing — 2026-10-08
+
+Public explorer evidence confirms the repeated funding relationship and also shows that the funding wallet itself participates in other token transfers and DEX/settler activity. In particular, `0xf2B1...EDB17D` used the Polygon 0x Settler V1.7 infrastructure on 2024-11-30 and later sent RCKT and other assets to separate addresses. This means the wallet is an active trading/transfer node rather than a one-off gas faucet. However, no public evidence reviewed in this pass identifies its human owner or proves that it is controlled by the same entity as `0x5E1c`.
+
+Verified examples:
+- 2024-11-30: `0xf2B1...EDB17D` called the 0x Settler V1.7 contract; internal flow included 0.920340709365657693 POL into the Settler route. Source: https://polygonscan.com/tx/0x3b48184c8b3b9039f8ebaa70881bd194436bdb5cefc90f258fa971b8603fd644
+- 2025-01-30: `0xf2B1...EDB17D` sent 0.119628631603060858 POL to `0x469CA19C1a83AdaB2E25bAE229A87510F193aA69`. Source: https://polygonscan.com/tx/0x9e5f249fdfaa94e4120fd7f73812a5f10592ddb9afeb4b30dc8ded9293e74285
+- 2025-09-05: `0xf2B1...EDB17D` sent 5,000,000 RCKT to `0xE1fB78C271c7a37Ef5E3DF1c5EC38aB5bc1E5bc9`. Source: https://polygonscan.com/tx/0x21fa7d52fedc2a2dff065ee9588b24be2b78681f0c06c2e51183e428a48c6595
+
+### Assessment
+
+The evidence raises the priority of `0xf2B1...EDB17D` as a funding/counterparty node, but does not yet justify attributing it to a named person, project, exchange, or organization. The strongest next test is temporal correlation: compare the source wallet's inbound funding immediately before each transfer to `0x5E1c`, then compare downstream destinations after those transfers. Reciprocal transfers between the two wallets would materially strengthen the relationship; shared upstream exchange/bridge sources would be a weaker but useful correlation.
