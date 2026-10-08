@@ -76,3 +76,29 @@ The `0xf2B1 -> 0x5E1c` leg is directly verified on multiple dates in November/De
 ### Caution
 
 The amounts are generally small. Therefore the relationship is currently best characterized as a **persistent operational/transactional cluster**, not evidence of financial control or common ownership.
+
+
+## Finding 7 — Additional downstream distribution node
+
+Address `0xE1fB78C271c7a37Ef5E3DF1c5EC38aB5bc1E5bc9` is a separate downstream recipient of `0xf2B1...EDB17D`.
+
+Verified examples:
+- 2025-09-05: `0xf2B1...` sent 5,000,000 RCKT to `0xE1fB...`.
+- 2025-09-05: `0xf2B1...` sent 0.141407956109834661 POL to the same `0xE1fB...` address approximately 12 minutes earlier.
+
+Sources:
+- https://polygonscan.com/tx/0x21fa7d52fedc2a2dff065ee9588b24be2b78681f0c06c2e51183e428a48c6595
+- https://polygonscan.com/tx/0x3a85c2bdeb509500a4f6731137d1e5c8bf1e8ace615663a13465d945bb332342
+
+### Assessment
+
+This strengthens the characterization of `0xf2B1...` as an active distribution/transfer node. It does not establish that `0xE1fB...` is controlled by the same party as `0x5E1c...`. The temporal proximity between the POL and RCKT transfers is notable but is not, by itself, evidence of a coordinated operation.
+
+## Next investigative test
+
+Priority order is now:
+1. Trace inbound funding to `0xf2B1...` immediately before its transfers to `0x5E1c...`.
+2. Trace the reciprocal `0x469C...` relationship for common upstream sources.
+3. Trace `0xE1fB...` around the September 2025 RCKT/POL transfers.
+4. Search for bridge/exchange contracts shared by these nodes.
+5. Test whether any of these nodes intersect with the target's PENGU, PEPE, MAGA/TRUMP, TON, or TRON activity.
