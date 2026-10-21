@@ -60,7 +60,7 @@ The 2024-11-26 pass-through is not the only observed transfer from `0x44c7e46a3e
 
 - **Observed:** repeated direct POL transfers from `0x44c7...` to `0xf2B1...` across several dates, including a further small transfer in November 2025.
 - **Derived:** `0x44c7...` is a recurring upstream funding source for `0xf2B1...`, not merely the sender in the single November 26 transaction.
-- **Caveat:** The five listed transfers do not by themselves establish that every inbound amount was passed to the target. The November 26 transfer is the only one in this set for which this addendum has reconciled a precise 20-second, amount-plus-fee pass-through to `0x5E1c...`.
+- **Caveat (updated 2026-10-21):** The five listed transfers do not by themselves establish that every inbound amount was passed to the target. Subsequent review has identified additional near-exact inbound/outbound reconciliations on November 26 and November 29, documented in Finding 10 below.
 - **Alternative explanations retained:** gas funding, operational transfers, a wallet service, or automated activity remain possible. The upstream address's high transaction nonce/activity and transfers to other addresses are reasons to investigate its role before attributing it to a person or a coordinated cluster.
 
 ### Next tests
@@ -69,3 +69,44 @@ The 2024-11-26 pass-through is not the only observed transfer from `0x44c7e46a3e
 2. Reconcile the 2024-12-15 inbound transfer against the two direct transfers to `0x5E1c...` on 2024-12-16 and all intervening fees/transfers.
 3. Trace the 2025-11-17 top-up against the same-day outgoing transfers, while accounting for other inbound POL deposits.
 4. Inspect `0x44c7...`'s other recipients and funding sources to determine whether this is broad gas-funding behavior rather than a relationship unique to the investigation graph.
+
+
+## Finding 10 — Additional near-exact funding-to-target sequences
+
+Review of the intermediary's chronological PolygonScan transaction list identifies two additional sequences where incoming POL is followed shortly by an outgoing transfer to target `0x5E1c...`. The displayed transaction values and fees reconcile to within tiny differences consistent with explorer display rounding; the raw transaction values should be retrieved via RPC/API before calling these exact at wei-level precision.
+
+### Sequence A — 2024-11-29
+
+- **16:25:09 UTC:** `0x44c7...` sent **0.17154916 POL** to `0xf2B1...`, transaction https://polygonscan.com/tx/0x34a6a0f28503e4bfeffa42deab4640c19bc9c7c871652a188eb6f573a100ec86
+- **16:27:13 UTC:** `0xf2B1...` sent **0.169792608 POL** to `0x5E1c...`, transaction https://polygonscan.com/tx/0xdb6f604a86197c7e8ef493e39598b66bafdc42dc698e07b7d33c83664e5f2f23
+- PolygonScan displays an outbound fee of **0.00175655 POL**.
+
+Using the displayed values:  
+`0.171549160 - 0.169792608 - 0.001756550 = 0.000000002 POL`
+
+The 2-nano-POL remainder is below the precision shown for the inbound amount and fee, so this is a **near-exact displayed-value reconciliation**, not yet an asserted wei-exact reconciliation.
+
+### Sequence B — 2024-11-26, later that day
+
+- **23:00:12 UTC:** `0x44c7...` sent **0.11341975 POL** to `0xf2B1...`, transaction https://polygonscan.com/tx/0xfd4df44a909982b7ea3b4a2fbb6f4bdab10f2855c66464435e9febe05223b481
+- **23:01:38 UTC:** `0xf2B1...` sent **0.113133959 POL** to `0x5E1c...`, transaction https://polygonscan.com/tx/0x1a29fca4fd59ef34b3c35ca496878dad2d392ff8a32b2df68d8dc738de1a18ff
+- PolygonScan displays an outbound fee of **0.00054384 POL**.
+- Earlier at **01:26:51 UTC**, `0x469C...` also sent **0.00025805 POL** to `0xf2B1...`, transaction https://polygonscan.com/tx/0x5ea97d513bcb19dc5da8bf6acc0b570ca6d164f665e3918c6b072bd57f2f8106.
+
+Including both inbound transfers, the displayed-value reconciliation is:  
+`0.113419750 + 0.000258050 - 0.113133959 - 0.000543840 = 0.000000001 POL`
+
+Again, the 1-nano-POL remainder is within the precision limits of the displayed inbound amounts and fee. This sequence is especially important because the funding is **mixed-source**: the incoming amount from `0x44c7...` alone does not cover the outgoing transfer plus fee; the earlier `0x469C...` top-up is needed for the near-exact reconciliation.
+
+### Updated assessment
+
+Three tightly timed near-exact pass-through candidates are now documented:
+1. **2024-11-26 01:10 UTC:** `0x44c7...` → `0xf2B1...` → `0x5E1c...`, reconciled exactly from the displayed values and recorded fee.
+2. **2024-11-26 23:00 UTC:** `0x44c7...` and earlier `0x469C...` → `0xf2B1...` → `0x5E1c...`, near-exact at displayed precision.
+3. **2024-11-29 16:25 UTC:** `0x44c7...` → `0xf2B1...` → `0x5E1c...`, near-exact at displayed precision.
+
+The recurrence materially strengthens the inference that `0xf2B1...` sometimes acts as an operational POL relay for the target, with `0x44c7...` a recurring upstream source and `0x469C...` contributing to at least one mixed-source funding sequence. It still does not establish common ownership, identity, or illicit purpose. The intermediary's other activity, including interactions with JumpTask and a Mimic swapper, means ordinary service/automation explanations remain live.
+
+### Required precision check
+
+Before treating Sequences B and A as exact at the wei level, obtain raw transaction values, gasUsed, and effectiveGasPrice from receipts/API and calculate the balance delta for the intermediary around each sequence. The explorer's rounded UI values are insufficient to resolve the tiny residuals.
