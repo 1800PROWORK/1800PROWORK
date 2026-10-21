@@ -110,3 +110,25 @@ The recurrence materially strengthens the inference that `0xf2B1...` sometimes a
 ### Required precision check
 
 Before treating Sequences B and A as exact at the wei level, obtain raw transaction values, gasUsed, and effectiveGasPrice from receipts/API and calculate the balance delta for the intermediary around each sequence. The explorer's rounded UI values are insufficient to resolve the tiny residuals.
+
+
+## Finding 11 — Upstream address 0x44c7… is an exceptionally high-volume distributor
+
+A separate review of the PolygonScan transaction history for `0x44c7e46a3e3AF17A1b2002893B46Fc6481a5cFaF` materially changes how its relationship to this graph should be interpreted.
+
+PolygonScan's indexed transaction page reports **569,642 total transactions** for the address and more than **100,000 outgoing transactions** in the displayed outgoing view (the explorer notes that it shows the last 100,000 records). The visible transaction list shows many separate POL transfers to numerous distinct recipient addresses within short intervals. Source: https://polygonscan.com/txs?a=0x44c7e46a3e3af17a1b2002893b46fc6481a5cfaf
+
+### Evidentiary assessment
+
+- **Observed:** the explorer currently reports a very high transaction count and shows broad fan-out transfers to many unrelated-looking recipient addresses.
+- **Derived:** `0x44c7...` is not a low-activity wallet whose only notable relationship is funding `0xf2B1...`. Its repeated deposits to `0xf2B1...` must be interpreted against a large-scale distribution pattern.
+- **Hypotheses retained, not confirmed:** the address may be an automated distribution/funding service, operational hot wallet, or other high-volume transaction system. The public explorer evidence cited here does not identify the operator or establish the exact service type.
+- **Impact on graph confidence:** this high-volume behavior weakens the attribution value of the shared upstream source by itself. The timing and amount-plus-fee reconciliations between `0xf2B1...` and `0x5E1c...` remain meaningful evidence of relay-like transfers, but the fact that `0x44c7...` funds `0xf2B1...` is not strong evidence of common ownership between `0x44c7...`, `0xf2B1...`, and the target.
+- **Important distinction:** the near-exact funding sequences are transaction-flow evidence, not identity evidence. A third-party service can fund multiple independent users.
+
+### Next tests
+
+1. Sample historical outgoing transfers from `0x44c7...` around the 2024 dates and compare recipients, amounts, and cadence to determine whether the `0xf2B1...` deposits resemble its normal distribution pattern.
+2. Inspect the address's inbound counterparties and contract interactions to characterize the service mechanism, without assigning an operator absent independent evidence.
+3. Prioritize direct temporal/amount reconciliation at the `0xf2B1... -> 0x5E1c...` edge over the upstream `0x44c7...` edge for relationship analysis.
+4. Keep the possible service/hot-wallet explanation explicit in any future report and avoid clustering all recipients of `0x44c7...` as commonly controlled.
