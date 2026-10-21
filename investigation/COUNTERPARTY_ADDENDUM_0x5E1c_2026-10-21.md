@@ -157,3 +157,12 @@ The two listed target transfers total **0.205083498603782516 POL**. Adding the t
 1. Retrieve raw transaction and receipt data for the inbound and both outbound transactions and independently verify amounts, timestamps, and gas fees.
 2. Reconstruct the intermediary's full POL balance chronologically across the interval, including opening balance and all other transactions.
 3. Keep this sequence separate from the exact reconciliations in Findings 8 and 10 unless the full ledger resolves the residual.
+
+
+## Finding 13 — Reciprocal counterparty activity (September 2025)
+
+Additional transaction records indicate that `0xf2B1ceA4e5AaAbDD1799ec04D74d23F3FFEDB17D` and `0xE1fB78C271c7a37Ef5E3DF1c5EC38aB5bc1E5bc9` transferred native POL in both directions on 2025-09-04 and 2025-09-05. The same period includes a 5,000,000 RCKT transfer from `0xf2B1...` to `0xE1fB...`.
+
+**Assessment:** This establishes a reciprocal transactional relationship in the observed records. It does not establish common ownership, coordinated intent, or that POL transfers were payment for RCKT. The complete balances and intervening activity remain to be reconciled.
+
+**Next steps:** Reconstruct both wallets' full POL balances from 2025-09-04 through 2025-09-06 UTC, then trace the RCKT transfer's origin and subsequent movement. Keep transaction correlation separate from identity attribution.
