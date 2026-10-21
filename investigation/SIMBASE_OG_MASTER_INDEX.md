@@ -1,0 +1,70 @@
+# SIMBASE OG — Master Investigation Index
+
+**Updated:** 2026-10-21  
+**Repository:** `1800PROWORK/1800PROWORK`  
+**Purpose:** Central index for active blockchain investigations, engineering work, source records, verification gaps, and recovered workflow instructions.
+
+## Operating standard
+
+Preserve original records and unresolved leads. Do not equate missing evidence with evidence of absence. Keep verified facts, derived findings, investigative leads, conflicting evidence, unverified claims, and disproven claims distinct. Retain source identifiers, timestamps, transaction hashes, addresses, methods, and limitations. Corrections must explain what changed without silently overwriting prior conclusions.
+
+**Working principle:** Preserve first. Verify thoroughly. Reconcile contradictions. Reassess conclusions. Document every material change.
+
+The protocol above is preserved in the project record *Forensic Audit Followup* (2026-10-20). It is a recovered project instruction fragment, **not verified as the complete original custom-instructions text**.
+
+## Workstream index
+
+| ID | Workstream | Primary target / scope | Current evidence position | Next action |
+|---|---|---|---|---|
+| SW-01 | Polygon wallet and counterparty graph | `0x5E1cf44F3E0314E9F28bf7140166A4F113A9D6DA` | Existing casefile, evidence matrix, source list, legacy reconciliation, chronological ledger, and counterparty graph. The wallet has documented DEX/bridge interactions; ownership or common control of counterparties is not established merely by correlation. | Continue from direct funding counterparty `0xf2B1…`, reciprocal relationship `0x469C…`, and downstream node `0xE1fB…`; test bridge/exchange intersections and retain all alternative explanations. |
+| SW-02 | Bitcoin address | `1PuJjnF476W3zXfVYmJfGnouzFDAXakkL4` | Prior report records conflicting explorer balance snapshots (22.14864203 BTC vs approximately 47.15 BTC); neither should be treated as current verified balance without direct API/UTXO reconciliation. | Query a direct Bitcoin data source; reconcile confirmed UTXOs, mempool state, transaction history, and explorer snapshot times before drawing balance conclusions. |
+| SW-03 | Base / EIP-7702 / Basename | `0xC0e8d8Df729a91FB3920A026Ce548b3A9d00BA06`; name lead `i900protech.base.eth` | Delegation target, paymaster, bundler, and Basenames controller have been identified as leads, but the specific registration transaction and exact sponsorship/delegation path remain to be tied together. | Obtain registration transaction hash; inspect receipt, logs, call trace, UserOperation, EntryPoint, paymaster and bundler participation; verify current name ownership/resolver and delegation state from authoritative chain data. |
+| SW-04 | SIMBASE engineering / repository state | `1800PROWORK/1800PROWORK` | Repository is accessible with push permission. Latest commit discovered during this checkpoint: `8e2ae850383eda75fce027c23f3cb9657edc149c` (2026-10-13), which adds a preliminary OP Mainnet DefaultReceiver investigation. Etherscan V2 normalization/provider work and earlier 7/7 tests are documented in project records; current CI state has not been re-run in this checkpoint. | Keep provider, normalization, canonical model, market enrichment, valuation, and reporting layers separate. Verify current code/tests before claiming present test status; prioritize auditable evidence ingestion and provenance. |
+| SW-05 | TON / cross-chain lead | TON counterparties and any claimed relationship to SW-01 | Retained as an open lead; a wallet-level connection has not been established in the cited investigation records. | Identify candidate TON account/transaction identifiers from source records, then trace transactions and counterparties. Do not infer identity from Telegram/project metadata alone. |
+| SW-06 | TRON / TRX lead | TRON counterparties and any claimed relationship to SW-01 | Retained as an open lead; a wallet-level connection has not been established in the cited investigation records. | Identify candidate TRON addresses/transaction hashes and independently trace transfers, exchange endpoints, and timing correlations. |
+| SW-07 | PENGU / Pudgy Penguins | Exact token-contract and NFT interactions related to SW-01 | Investigative lead only; connection not yet proven. Keep PENGU distinct from similarly named assets and keep PEPE and APEPE separate. | Search exact contract interactions and NFT transfers, then connect only through transaction-level evidence. |
+| SW-08 | Ethereum NFT marketplace transaction network | Case `ETH-9616B7`; primary transaction `0x9616b78607f8515e2dba14fe3b8d73da894697c8e726f370d7dde9d60965a24b` | Existing Phase 2 report documents repeated marketplace participation and a historical ETH transfer. Common ownership, wash trading, or fraud are not established. | Obtain complete transaction receipts/logs and histories for the four principal addresses; test ordinary marketplace aggregation and alternative explanations before attribution. |
+| SW-09 | Original custom-instructions recovery | Original instruction text and surviving fragments | Complete original text not yet recovered. Existing investigation protocol is a reliable project fragment, but must not be mislabeled as the original full instructions. | Continue searching project files, library artifacts, repository history, and prior conversation records. Preserve verbatim fragments with provenance and label any new synthesis as reconstruction. |
+
+## Canonical repository records
+
+### Polygon / `0x5E1c…D6DA`
+- `investigation/WALLET_0x5E1c_CASEFILE.md`
+- `investigation/EVIDENCE_MATRIX.md`
+- `investigation/SOURCES.md` (verify exact path before relying on it)
+- `investigation/TODO.md`
+- `investigation/LEGACY_MEMORY_RECONCILIATION.md`
+- `investigation/TRANSACTION_LEDGER_0x5E1c.md`
+- `investigation/COUNTERPARTY_FINDINGS_0x5E1c.md`
+
+### Other repository records
+- `investigation/CONTRACT_0x2a8010A9_DefaultReceiver_OP_MAINNET.md` — preliminary OP Mainnet lead; verify before attribution.
+- `INVESTIGATION/CASE_INDEX.md` — separate identity/EAS investigation framework.
+- `INVESTIGATION/SIMBASE_IDENTITY_VERIFICATION_BRIEF.md` — related identity-verification brief.
+
+Paths above are index pointers, not assertions that each file has been freshly reviewed in this checkpoint.
+
+## Evidence-status vocabulary
+
+- **Verified fact:** directly supported by authenticated primary evidence.
+- **Derived finding:** reproducible calculation or inference from verified records; method documented.
+- **Investigative lead:** plausible avenue requiring testing; retained even if currently inaccessible.
+- **Conflicting evidence:** sources disagree; reconciliation remains open.
+- **Unverified claim:** currently insufficient evidence to substantiate.
+- **Disproven claim:** reliable evidence affirmatively contradicts the claim.
+- **Blocked:** verification cannot proceed until a specific source, identifier, permission, or technical dependency is available.
+
+These labels describe evidentiary strength; they do not authorize automatic deletion or closure of a lead.
+
+## Immediate execution order
+
+1. Resume the Polygon graph from the repository's current counterparty findings and preserve the existing graph.
+2. Verify the Bitcoin balance conflict from direct UTXO data.
+3. Recover the Base registration transaction and reconstruct its actual execution path.
+4. Gather exact TON, TRON, and PENGU identifiers from surviving records and test those leads.
+5. Re-run or inspect the current SIMBASE tests before reporting engineering readiness.
+6. Continue original instruction recovery; keep original text, recovered fragments, and reconstruction in separate categories.
+
+## Checkpoint and change control
+
+This index was created as a navigation and status layer. It does not replace underlying casefiles, transaction ledgers, or source records. Future changes should add the source, observation time, chain/network, transaction/address identifiers, verification method, status change, and reason for the change. Never overwrite a prior finding without preserving its earlier wording and provenance.
