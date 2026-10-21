@@ -132,3 +132,28 @@ PolygonScan's indexed transaction page reports **569,642 total transactions** fo
 2. Inspect the address's inbound counterparties and contract interactions to characterize the service mechanism, without assigning an operator absent independent evidence.
 3. Prioritize direct temporal/amount reconciliation at the `0xf2B1... -> 0x5E1c...` edge over the upstream `0x44c7...` edge for relationship analysis.
 4. Keep the possible service/hot-wallet explanation explicit in any future report and avoid clustering all recipients of `0x44c7...` as commonly controlled.
+
+
+## Finding 12 — 2025-12-15 inbound funding and non-exact follow-on reconciliation
+
+A further inbound transfer from upstream address `0x44c7e46a3e3AF17A1b2002893B46Fc6481a5cFaF` to intermediary `0xf2B1ceA4e5AaAbDD1799ec04D74d23F3FFEDB17D` is recorded at **2025-12-15 22:05:08 UTC** for **0.21031415 POL**. Transaction: `0x8ca27e8fe7bec3415ee8a929e6db1d5196f3e501a092e0903e799eaab6c4c963`.
+
+Subsequent transfers from `0xf2B1...` to target `0x5E1cf44F3E0314E9F28bf7140166A4F113A9D6DA` identified in the current review are:
+
+- **2025-12-16 01:17:26 UTC:** 0.204071567929187516 POL; transaction `0xd814822249d54fab280607dbfdeb83732343a2e16ac912de28c760d6b0a3a949`; stated transaction fee 0.001187736139044 POL.
+- **2025-12-16 10:56:06 UTC:** 0.001011930674595 POL; transaction `0x6d1bbbf586024c607a271addb65a945c939cfbbdbae941f9c0f8bc02900e8784`; stated transaction fee 0.000684835238325 POL.
+
+The two listed target transfers total **0.205083498603782516 POL**. Adding the two stated fees gives **0.206956069981151516 POL**, leaving **0.003358080018848484 POL** unreconciled against the 0.21031415 POL inbound amount.
+
+### Evidentiary assessment
+
+- **Observed:** the upstream deposit is followed by two identified transfers from the intermediary to the target.
+- **Derived:** those listed transfers plus their stated fees do **not** exactly reconcile to the inbound deposit. This sequence must not be described as an exact single-deposit pass-through on the current evidence.
+- **Unresolved:** a complete chronological balance reconciliation is required, including the intermediary's opening balance, all intervening incoming/outgoing transfers, and transaction fees. The residual could reflect other activity or pre-existing funds; the available figures alone do not determine which.
+- **Attribution limit:** temporal proximity and a transfer path establish transaction-flow relationships, not common ownership or control.
+
+### Next tests
+
+1. Retrieve raw transaction and receipt data for the inbound and both outbound transactions and independently verify amounts, timestamps, and gas fees.
+2. Reconstruct the intermediary's full POL balance chronologically across the interval, including opening balance and all other transactions.
+3. Keep this sequence separate from the exact reconciliations in Findings 8 and 10 unless the full ledger resolves the residual.
