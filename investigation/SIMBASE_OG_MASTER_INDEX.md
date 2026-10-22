@@ -1,6 +1,6 @@
 # SIMBASE OG — Master Investigation Index
 
-**Updated:** 2026-10-21 (TRON block verification checkpoint)  
+**Updated:** 2026-10-22 (Ethereum wallet-access and transaction-lead checkpoint)  
 **Repository:** `1800PROWORK/1800PROWORK`  
 **Purpose:** Central index for active blockchain investigations, engineering work, source records, verification gaps, and recovered workflow instructions.
 
@@ -23,7 +23,7 @@ The protocol above is preserved in the project record *Forensic Audit Followup* 
 | SW-05 | TON / cross-chain lead | TON counterparties and any claimed relationship to SW-01 | Retained as an open lead; a wallet-level connection has not been established in the cited investigation records. | Identify candidate TON account/transaction identifiers from source records, then trace transactions and counterparties. Do not infer identity from Telegram/project metadata alone. |
 | SW-06 | TRON / TRX lead | Candidate block ID `0000000005345f3be4895b35cf28b3669d8f5b94547ca4f40a5af50a0fcce089` (claimed parent `0000000005345f3a4cbb12a6dfb8e51786c109f2f291a5d5a1d83487b0267cf6`) | Candidate and parent IDs encode consecutive heights 87,318,331 and 87,318,330; canonical IDs, parentHash, transactions, and confirmation depth remain unverified. A retrieved TRONSCAN summary height of 87,180,165 conflicts with the reported >200 confirmations if current, but may be stale. | Verify both IDs and parentHash via a POST-capable TRON FullNode/SolidityNode; reconcile the height/confirmation discrepancy before tracing transactions. See `investigation/TRON_BLOCK_87318331_VERIFICATION.md`. |
 | SW-07 | PENGU / Pudgy Penguins | Exact token-contract and NFT interactions related to SW-01 | Investigative lead only; connection not yet proven. Keep PENGU distinct from similarly named assets and keep PEPE and APEPE separate. | Search exact contract interactions and NFT transfers, then connect only through transaction-level evidence. |
-| SW-08 | Ethereum NFT marketplace transaction network | Case `ETH-9616B7`; primary transaction `0x9616b78607f8515e2dba14fe3b8d73da894697c8e726f370d7dde9d60965a24b` | Existing Phase 2 report documents repeated marketplace participation and a historical ETH transfer. Common ownership, wash trading, or fraud are not established. | Obtain complete transaction receipts/logs and histories for the four principal addresses; test ordinary marketplace aggregation and alternative explanations before attribution. |
+| SW-08 | Ethereum NFT marketplace and wallet-access follow-up | Case `ETH-9616B7`; primary address `0x4023c5DB63d01c0A797D7949B2D5396Fd963EA49` | Existing Phase 2 report documents marketplace activity. New user-reported leads are preserved in `investigation/ETH_WALLET_ACCESS_AND_TRANSACTION_LEADS_2026-10-22.md`, including hashes `0xe27d3f3076e67c733d7858628a9b02b3553a54c56aba78550f1238ee42f640c4` and `0x28289bd23ca3f07c72f542f92d2bf89c2b41decb5a9f84b92fc6a0aa79926cf9`; their details and explorer labels remain independently unverified. Common ownership, fraud, or wallet compromise are not established. | Verify both transaction receipts, chain, timestamp, sender/recipient, assets, logs and traces; separately identify original wallet provider/account type and safe recovery path. |
 | SW-09 | Original custom-instructions recovery | Original instruction text and surviving fragments | Complete original text not yet recovered. Existing investigation protocol is a reliable project fragment, but must not be mislabeled as the original full instructions. | Continue searching project files, library artifacts, repository history, and prior conversation records. Preserve verbatim fragments with provenance and label any new synthesis as reconstruction. |
 
 ## Canonical repository records
@@ -39,6 +39,7 @@ The protocol above is preserved in the project record *Forensic Audit Followup* 
 - `investigation/COUNTERPARTY_ADDENDUM_0x5E1c_2026-10-21.md` — dated pass-through funding trace; includes displayed-value reconciliation limits.
 
 ### Other repository records
+- `investigation/ETH_WALLET_ACCESS_AND_TRANSACTION_LEADS_2026-10-22.md` — preserves user-reported Ethereum hashes, address labels, wallet-access issue, verification gaps, and recovery precautions.
 - `investigation/CONTRACT_0x2a8010A9_DefaultReceiver_OP_MAINNET.md` — preliminary OP Mainnet lead; verify before attribution.
 - `INVESTIGATION/CASE_INDEX.md` — separate identity/EAS investigation framework.
 - `INVESTIGATION/SIMBASE_IDENTITY_VERIFICATION_BRIEF.md` — related identity-verification brief.
