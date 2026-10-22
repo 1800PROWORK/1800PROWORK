@@ -12,6 +12,8 @@
 - [ ] Search exact PENGU contract interactions
 - [ ] Search Pudgy Penguins NFT transfers
 - [ ] Search TON counterparties
+- [ ] Verify candidate block 87,318,331 and claimed parent via POST-capable TRON node; reconcile explorer-height/confirmation discrepancy (see `investigation/TRON_BLOCK_87318331_VERIFICATION.md`)
+- [ ] After block verification, extract and trace relevant TRON transactions; test any link to SW-01
 - [ ] Search TRON/TRX flows
 - [ ] Keep PEPE and APEPE separate in every record
 
