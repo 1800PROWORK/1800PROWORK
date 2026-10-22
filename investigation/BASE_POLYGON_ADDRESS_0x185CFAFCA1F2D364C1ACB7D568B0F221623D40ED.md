@@ -75,3 +75,45 @@ The PolygonScan page associates this funder with the ENS label `trappist1d.eth`.
 5. Check whether the address `0x2365A03837e58FFd6B570CF214aE52F61188f1Ba` appears in other SIMBASE case files and whether any direct on-chain edge supports joining cases.
 
 **Evidence status:** the funder address is obtained from the explorer's Funded By link and cross-referenced against a BaseScan result; the exact first-funding transaction and common control remain unverified.
+
+
+## Addendum — Verified Polygon-to-Arbitrum bridge (2026-10-22)
+
+### Transaction pair
+
+The Polygon source transaction and Arbitrum destination transaction were reviewed through explorer-rendered transaction details.
+
+| Field | Observation |
+|---|---|
+| Source network | Polygon PoS |
+| Source transaction | `0x73e41848b54bd673c253c110750611f4db159689c094caa61a5dba8eeb27a305` |
+| Source timestamp | 2025-03-25 21:26:32 UTC |
+| Source asset / amount | 0.4 WETH |
+| Entry protocol | LI.FI; bridge route identified as Across |
+| Destination network | Arbitrum One (chain ID 42161) |
+| Destination transaction | `0x6abdec2ea5755f3b484f87d832bb24c9f298b088e5af43f21af0abb87201d1d3` |
+| Destination amount | 0.399944559262067387 WETH |
+| Destination recipient | Same 20-byte address as the Polygon target |
+| Deposit ID shown in source event | `1678308` |
+
+The source event was rendered as `FundsDeposited`, and the destination transaction included a `FilledRelay` event and WETH transfer to the target address. The amount difference is consistent with bridge fees / quote mechanics; no evidence from this pair alone indicates diversion.
+
+### Evidence classification
+
+- **Observed:** the source explorer page shows a 0.4 WETH Polygon bridge deposit initiated through LI.FI / Across.
+- **Observed:** the destination explorer page shows 0.399944559262067387 WETH delivered to the same address on Arbitrum.
+- **Derived, high confidence:** the two transactions are a cross-chain source/destination match based on the displayed protocol events, destination chain, deposit identifier, recipient, and amounts.
+- **Unresolved:** independently retrieving raw RPC receipts and decoding all logs; whether the wallet controller is a particular person; any relationship to other SIMBASE targets.
+- **Not established:** fraud, criminal intent, or common control with any other address.
+
+### Sources
+
+- Polygon source transaction: https://polygonscan.com/tx/0x73e41848b54bd673c253c110750611f4db159689c094caa61a5dba8eeb27a305
+- Arbitrum destination transaction: https://arbiscan.io/tx/0x6abdec2ea5755f3b484f87d832bb24c9f298b088e5af43f21af0abb87201d1d3
+
+### Follow-up
+
+1. Preserve transaction pages and obtain raw receipts/logs from an independent RPC or data provider.
+2. Continue to recover the exact Polygon initial-funding transaction associated with the explorer's `Funded By` lead (`0x2365A03837e58FFd6B570CF214aE52F61188f1Ba`); this is still not established by the bridge pair.
+3. Match other bridge leads by protocol message / deposit identifiers rather than address labels or approximate timing.
+4. Keep this address as a separate case from other SIMBASE targets unless a direct transaction-level link is verified.
