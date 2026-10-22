@@ -34,3 +34,12 @@
 - [ ] Trace alleged $151M assets
 - [ ] Trace alleged $870M assets
 - [ ] Determine whether figures were assets, token-unit counts, UI errors, or unrelated protocol balances
+
+
+## Priority 0 — Ethereum wallet access follow-up (2026-10-22)
+- [ ] Verify transaction 0xe27d3f3076e67c733d7858628a9b02b3553a54c56aba78550f1238ee42f640c4 on the correct network; capture receipt, block timestamp, from/to, value, token transfers, logs, and trace.
+- [ ] Verify transaction 0x28289bd23ca3f07c72f542f92d2bf89c2b41decb5a9f84b92fc6a0aa79926cf9; confirm or correct the reported “Kraken Hot Wallet 2” label and inbound direction using primary transaction data.
+- [ ] Trace inflows/outflows for 0x4023c5DB63d01c0A797D7949B2D5396Fd963EA49 and compare with the existing ETH-9616B7 case without assuming common control.
+- [ ] Verify the reported Relay Depository, contract-creator, Binance 20, MetaMask EIP-7702, and World Liberty Financial labels independently; preserve as reported leads until verified.
+- [ ] Determine the original wallet provider/account type and safe recovery path. Never request or enter seed phrases/private keys on untrusted sites.
+- [ ] See investigation/ETH_WALLET_ACCESS_AND_TRANSACTION_LEADS_2026-10-22.md; do not infer missing transaction data from explorer labels alone.
