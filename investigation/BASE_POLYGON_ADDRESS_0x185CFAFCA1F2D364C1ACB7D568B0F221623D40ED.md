@@ -117,3 +117,47 @@ The source event was rendered as `FundsDeposited`, and the destination transacti
 2. Continue to recover the exact Polygon initial-funding transaction associated with the explorer's `Funded By` lead (`0x2365A03837e58FFd6B570CF214aE52F61188f1Ba`); this is still not established by the bridge pair.
 3. Match other bridge leads by protocol message / deposit identifiers rather than address labels or approximate timing.
 4. Keep this address as a separate case from other SIMBASE targets unless a direct transaction-level link is verified.
+
+
+## Addendum — Additional verified bridge and lending evidence (2026-10-22)
+
+### A. Merkly / LayerZero: Polygon to Optimism
+
+LayerZero Scan links Polygon source transaction `0xcca85ec6e0267233b5a55c97c31f821ef52b26e926af8cf18a35360536165100` to Optimism destination transaction `0xe8c9f2e9d72ce2b4a3df4b324fddc26e4184cd88d8b3984671d81637b8120d6d`. The source address is the target wallet. LayerZero Scan reports **Delivered**, time taken 18m 22s, nonce 12040, GUID `0x81678bc0e4683f3ca08517e0b8578f40906c4e775a61cca1ccd830fca719014b`, and Merkly as source/destination application. The source calldata includes the target address as remote recipient.
+
+**Finding:** strong evidence of a successful Merkly/LayerZero cross-chain gas-refuel message intended for the target. This does not establish identity, fraud, or common control with another wallet.
+
+Sources:
+- https://layerzeroscan.com/tx/0xcca85ec6e0267233b5a55c97c31f821ef52b26e926af8cf18a35360536165100
+- https://optimistic.etherscan.io/tx/0xe8c9f2e9d72ce2b4a3df4b324fddc26e4184cd88d8b3984671d81637b8120d6d
+
+### B. Base inbound bridge transactions
+
+**Stargate / LayerZero:** Base transaction `0x397062c2c0d91cd6f6f44a007adb3dd66d1b480db3756a31695dc3ed7a90c251` shows 0.008998 ETH delivered from Stargate Pool Native to the target. The receipt includes `OFTReceived`, source endpoint ID `30110`, and amount `8998000000000000` wei. The source-side transaction has not yet been paired independently.
+
+Source: https://basescan.org/tx/0x397062c2c0d91cd6f6f44a007adb3dd66d1b480db3756a31695dc3ed7a90c251
+
+**Celer cBridge:** Base transaction `0xf71b701a7248d222b1aaec5e76fec62370fff00442498d8a4d4eec98b68e1610` shows 0.926402693881097845 WETH delivered to the target. Its `Relay` event reports transferId `0x829228024AEC74EB3173B02F47CCBB115ECA0970A61A0A99D880340F691CA6FF`, sender `0xDE1E598b81620773454588B85D6b5D4eEC32573e`, source chain ID `59144`, and source transfer ID `0xE3ED104CD18B1AC1423938462ED839D2316D8525B9FFF819F0EB8386453AF905`. The corresponding source transaction hash is still unresolved.
+
+Source: https://basescan.org/tx/0xf71b701a7248d222b1aaec5e76fec62370fff00442498d8a4d4eec98b68e1610
+
+### C. Base Aave / Morpho activity
+
+- **Aave borrow:** `0xc0aa0f2bf5494b7134c33f817f4fd93944e92309fa614333c7785148136166cd`, successful transaction at 2026-05-14 20:24:13 UTC; BaseScan labels the target as borrowing 2,000 USDC through Aave Pool Proxy Base.
+- **Morpho Bundler3 multicall:** `0x685bee5ef6a9fceda4f45db9b46556e8e2f37057f975efdeb5797fec84bcd187`, successful transaction at 2026-05-14 20:30:33 UTC; explorer transfer details show 2.005 WETH moving from Morpho General Adapter1 to Morpho.
+
+These calls occurred about 6 minutes 20 seconds apart. That timing alone does **not** prove the Aave borrow funded the Morpho position; intervening transfers and calldata must be reconstructed before claiming a causal flow. These are DeFi activity indicators, not standalone evidence of fraud.
+
+Sources:
+- https://basescan.org/tx/0xc0aa0f2bf5494b7134c33f817f4fd93944e92309fa614333c7785148136166cd
+- https://basescan.org/tx/0x685bee5ef6a9fceda4f45db9b46556e8e2f37057f975efdeb5797fec84bcd187
+
+### D. Aave withdrawal
+
+Base transaction `0x29adbed64e0eb1a3f09c1f95f26d2f3f90609c295d52b805619fdb6199a9e1ca` shows the target withdrawing 1.5 ETH via Aave Wrapped Token Gateway V3 2, with a corresponding reduction of approximately 1.5 aBasWETH. This is consistent with redeeming an Aave WETH position, not by itself an external third-party payment.
+
+Source: https://basescan.org/tx/0x29adbed64e0eb1a3f09c1f95f26d2f3f90609c295d52b805619fdb6199a9e1ca
+
+### E. Open funding lead and remaining verification
+
+The exact first-funding transfer from `0x2365A03837e58FFd6B570CF214aE52F61188f1Ba` to the target remains unverified; no transaction hash, timestamp, asset, or amount is asserted here. Next steps: recover that transfer from a complete address export/indexed transaction API; resolve Celer's source transfer ID on Linea; recover Stargate's source-side transaction; decode the full Morpho multicall and market events; and keep this wallet separate from other SIMBASE targets unless direct transaction-level evidence links them.
