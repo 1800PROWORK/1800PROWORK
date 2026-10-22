@@ -56,3 +56,22 @@ BaseScan's indexed page displayed about $6,694 across its multichain view and a 
 
 - BaseScan: https://basescan.org/address/0x185cfafca1f2d364c1acb7d568b0f221623d40ed
 - PolygonScan: https://polygonscan.com/address/0x185cfafca1f2d364c1acb7d568b0f221623d40ed
+
+
+## Addendum — Funding-address lead (2026-10-22)
+
+A follow-up review of the PolygonScan address page's **Funded By** link resolved the linked funder address to:
+
+`0x2365A03837e58FFd6B570CF214aE52F61188f1Ba`
+
+The PolygonScan page associates this funder with the ENS label `trappist1d.eth`. A separate BaseScan indexed result labels the same 20-byte address `basefarmer.base.eth` and shows repeated Base DeFi activity. This is a concrete address-level lead to investigate across chains, but ENS/Basename labels are not proof that the same person controls either name or that the funder and target share ownership.
+
+### Follow-up tests
+
+1. Retrieve the exact Polygon transaction by which `0x2365A03837e58FFd6B570CF214aE52F61188f1Ba` first funded the target; record tx hash, timestamp, amount, and native/token asset.
+2. Trace the funder's upstream funding and check whether the same source or repeated transfers fund other case targets.
+3. Compare the funder's Base transaction timeline with the target's Base activity, especially bridge and lending interactions, but only treat matched transaction IDs / protocol message IDs as cross-chain links.
+4. Verify current ENS and Basename records, resolver, controller/registrant history where available; keep labels as attribution leads only.
+5. Check whether the address `0x2365A03837e58FFd6B570CF214aE52F61188f1Ba` appears in other SIMBASE case files and whether any direct on-chain edge supports joining cases.
+
+**Evidence status:** the funder address is obtained from the explorer's Funded By link and cross-referenced against a BaseScan result; the exact first-funding transaction and common control remain unverified.
