@@ -63,3 +63,20 @@ The reported order is mint first, target transfer later; independent replay rema
 ## Provenance limitation
 
 This file preserves reported observations from the investigation handoff and the results of repository searches performed on 2026-10-29. It does not claim independent verification of the reported chain data. Keep reported observations, verified facts, calculations, hypotheses, and unresolved questions separate. A shared destination address alone does not prove common ownership.
+
+
+## Source wallet recovered — 2026-10-29
+
+The source address is now identified as `0x33D2443Bf16e48012D520c9ced7467814F9F8AEF`. This matches the Ethereum address record in the supplied Etherscan capture, the reported bridge amount, and the independently retrieved Base bridge-fill and subsequent transfer records. This establishes a transaction relationship with the target, not common ownership.
+
+Verified explorer records:
+- Base bridge fill, 2024-10-13 12:30:03 UTC: `0x731afcdedaa93a1211abdc187552ee1432208fc2d3ef57b38298b258cfcccab9`; 0.001435576812984087 WETH-equivalent delivered to the source address by Across.
+- Base Zora mint, 2024-11-16 02:20:55 UTC: `0xd0a7bb06dad2c407447e09a6472c811d1d61bfc7c76045be42d815ff6f5f0884`; token ID 2 from collection `0xb4703a3a73aec16e764cbd210b0fde9efdab8941`; 0.000111 ETH.
+- Base transfer to target, 2024-11-16 07:27:35 UTC: `0x02015b906b104d131b17e7b36f1aa84957d03116ffe904751658514ab72dd0a5`; 0.001315092 ETH.
+- Ethereum PYUSD transfer to target, 2024-11-16 13:03:59 UTC: `0x04364acfa081bc35d5bb2d9fa728ca390b62246627ee44af668ccd87aef16f01`; 48 PYUSD.
+- Ethereum native transfer to target, 2024-11-17 04:01:59 UTC: `0x0a51a3c31282b5b540b09554cb338c288591d349d03ef554864162b30439b051`; 4,600,460,220,348 wei. Nonce 12 belongs to the source transaction, not the target wallet.
+- Ethereum swap transaction, 2024-08-16: `0x9f7a9f751d7806dac6e4eaa5cd5a05c1260717aece5a1114b2f1baaf175c8c3f`; internal native ETH receipt was 11,402,288,783,282,731 wei.
+
+The L1 bridge transaction remains abbreviated as `0x445af7103e1…ee240`; its full hash still needs recovery. Explorer snapshots retrieved 2026-10-29 showed 0 ETH native balance and approximately 0.0004999 stETH on Ethereum, plus approximately 0.0000000366 ETH on Base. These are snapshots, not a complete portfolio valuation.
+
+Next: recover the complete L1 bridge hash and receipt, then enumerate the source and target histories on Ethereum and Base. Do not infer common ownership from the transaction links.
