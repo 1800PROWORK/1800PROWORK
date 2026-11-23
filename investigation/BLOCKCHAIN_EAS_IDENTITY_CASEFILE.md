@@ -1,205 +1,169 @@
 # Blockchain / EAS Identity Investigation Casefile
 
-**Case status:** Framework established / origin verification pending  
+**Case status:** Evidence reconciliation in progress; no common-origin or real-world identity conclusion established by this casefile  
 **Working repository:** `1800PROWORK/1800PROWORK`  
-**Case branch:** `investigation/blockchain-eas-casefile`  
+**Working branch:** `investigation/casefile-verifiable-improvements`  
 **Prepared:** 2026-08-21  
-**Last reviewed:** 2026-08-23
+**Reviewed:** 2026-11-23
+
+> **Scope and caution:** This document is an investigative framework, not a finding of wrongdoing, ownership, or real-world identity. Repository records cited below are leads until their underlying primary data are independently retrieved and reproduced. Do not publish attribution claims based solely on code similarity, explorer labels, names, or behavioral correlation.
 
 ## 1. Objective
 
-Determine whether apparently separate blockchain deployments and operational footprints can be tied to a common controlling entity through independently verifiable cryptographic, transaction-level, contract-level, or procedural evidence.
+Determine whether independently identified blockchain deployments and operational activity have demonstrable technical links. Keep separate the questions of (1) shared software or procedure, (2) address control, (3) control of multiple addresses or contracts, and (4) attribution to a real-world person or organization.
 
-The investigation is **not primarily a SIMBASE investigation**. SIMBASE is treated only as a possible correlation target. The primary objective is to identify concrete linkages and, where possible, independently verify control/ownership of relevant blockchain addresses.
+SIMBASE is one possible correlation target, not a premise or conclusion of this investigation.
 
-## 2. Investigation Model
+## 2. Evidentiary model
 
-The working hypothesis is that a cross-chain behavioral fingerprint may reveal a common operational origin between legacy Ethereum Mainnet activity and transient Base deployments. Behavioral similarity alone is not proof of common ownership. The evidentiary standard should escalate from:
+Use the following evidence ladder as an ordering of investigative strength, not as a substitute for assessing the quality and independence of each source:
 
-1. **Structural similarity** — Similar code, contract patterns
-2. **Temporal / procedural overlap** — Timing and operation correlations
-3. **Shared deployment or funding infrastructure** — Common treasury or bridge patterns
-4. **Shared signing patterns or repeated exact calldata constructions** — Identical transaction fingerprints
-5. **Direct cryptographic linkage** — Hash or signature verification
-6. **Independent proof of address control** — Signed messages or key-controlled transactions
+1. Structural or code similarity — may indicate shared source, template, or compiler pipeline.
+2. Temporal or procedural similarity — may indicate correlated operations, but can have alternative explanations.
+3. Shared funding, bridge, deployment, or transaction infrastructure — strengthens a relationship hypothesis; intermediaries and custodial services are possible confounders.
+4. Exact transaction, calldata, or bytecode correspondence — supports a technical relationship, not necessarily common control.
+5. A reproduced cryptographic relationship — proves only the precise cryptographic proposition tested.
+6. Evidence of control of a specific address at a particular time — does not, without more, identify the human or organization behind it.
+7. Independently corroborated real-world attribution — requires separate, reliable evidence and careful review.
 
-Only the final categories can establish strong identity attribution.
+Do not treat any single rung as automatically proving the next. In particular, code reuse does not prove common ownership; a signature proves authorization by a key under the signature scheme, not necessarily the key-holder's legal identity.
 
-## 3. Current Target Artifact
+## 3. Target artifact and scope limitation
 
-A contract address examined during the investigation is:
+A target address recorded in prior investigation material is:
 
-```
-0x1e4d2113D8E304122f2ceAA20B194d7801a84984
-```
+`0x1e4d2113D8E304122f2ceAA20B194d7801a84984`
 
-The investigation previously identified a need to retrieve and independently inspect its ABI and verified source where available.
+This casefile does not independently establish its chain, contract status, verified source, deployer, or relationship to the `gasSaver` code. Record and verify those attributes separately before drawing conclusions.
 
-## 4. Solidity / Hash Artifact Under Investigation
+## 4. `gasSaver` hash investigation
 
-The following logic was supplied during the investigation and is preserved as an analysis artifact:
+The supplied code artifact contains this comparison:
 
 ```solidity
-function gasSaver(uint256 n) external {
-    address a0 = msg.sender;
-    uint256 n0 = 100;
-    bytes memory bb = abi.encode(a0, n0);
-    if (keccak256(bb) == 0x5c53c7d6ea38ad0e745b72557f2752b0d8873a30c040b4f665725c033b82a3a1) {
-        // subsequent assembly / contract logic was examined separately
-    }
+bytes memory bb = abi.encode(msg.sender, uint256(100));
+if (keccak256(bb) == 0x5c53c7d6ea38ad0e745b72557f2752b0d8873a30c040b4f665725c033b82a3a1) {
+    // implementation details must be taken from verified source
 }
 ```
 
-### Important Interpretation
+The candidate digest is a code constant. It is not a private key, seed phrase, identity proof, or address by itself.
 
-The 32-byte value above is a **candidate comparison constant in contract logic**. It is **not**, by itself, evidence of a wallet private key, seed phrase, owner identity, or address ownership.
+### Reproducible test specification
 
-**For verification**, the exact encoding must be reproduced:
-- `abi.encode(a0, uint256(100))` uses Solidity ABI word encoding (not packed encoding)
-- Candidate addresses should be tested by computing the exact **Keccak-256 digest** of the canonical ABI encoding
-- Compare the complete 32-byte result against the constant
-- Record both input and output for chain-of-custody
+For each candidate address obtained independently from a cited primary record:
 
-## 5. EAS Evidence Track
+1. Validate and preserve the full 20-byte address.
+2. ABI-encode `(address, uint256(100))` using standard ABI encoding (not packed encoding). The result is 64 bytes: the address left-padded to one 32-byte word, followed by the integer 100 as a 32-byte big-endian word.
+3. Compute Ethereum Keccak-256 (not NIST SHA3-256) over those exact bytes.
+4. Compare the complete 32-byte output to `0x5c53c7d6ea38ad0e745b72557f2752b0d8873a30c040b4f665725c033b82a3a1`.
+5. Record the address source, input bytes, algorithm/library and version, digest, result, and independent recheck.
+6. Separately establish whether that address actually called the relevant function and whether the transaction succeeded. A mathematical preimage match alone does not establish that the address executed the code or controlled a contract.
 
-The investigation included Base EAS Schema #15 (described as **Sign Document**) and an EAS attester on Sepolia associated with a blockchain land-registry experiment.
+**Current result:** No candidate preimage result is asserted in this casefile. Repository evidence describes matching code/hash patterns in multiple Base contracts, but that is evidence of code reuse only and must be checked against each live explorer/source record before being treated as independently verified here. See `INVESTIGATION/EVIDENCE_001_GASSAVER_HASH.md` and `INVESTIGATION/GASSAVER_SOURCE_REUSE.md` as leads.
 
-**Reported schema artifacts:**
+## 5. EAS evidence — keep networks separate
 
-| Metric | Value |
-|---|---|
-| Schema #16 (Land Registry) | `uint8 holdType, uint8 useType, uint64 expiration, int40[2][] polygonArea` |
-| Schema #15 (Sign Document) | Base network |
-| Total attestations | 1,425 (reported) |
-| Land Registry attestations | 9 (reported) |
-| Sign Document attestations | 1,416 (reported) |
-| Multichain attestations | 59 (reported) |
-| Reported creation date | 2023-02-23 |
+### Sepolia Schema #15 record
 
-**Status:** These figures are **investigation leads supplied in prior work**, not independently re-verified facts in this repository commit. They **must** be checked against:
-- Relevant EAS contracts
-- Explorer records
-- Schema registry data
-- Transaction receipts
+The repository contains a source-linked record for an EAS Sepolia schema described as “Sign Document.” The recorded details are:
 
-before being promoted to verified evidence.
+- Network: Ethereum Sepolia
+- Schema UID: `0xd3f24e873e8df2d9bb9af6f08ea1ddf61f65754d023f3ea761081e3e6a226a80`
+- Schema definition: `bytes32 hashOfDocument,string note`
+- Creator recorded: `0x01a93612f26100B6E18a2e3dd57df5c3ccaFeca1`
+- Creation transaction recorded: `0x27fc6ef0439d11dc2243e2254c9e2da850f3a3c34dc91d70f713361b6a7e0c65`
+- Creation time recorded: 2023-02-23 08:00:36 UTC
+- EAS Scan count recorded in the evidence note: 190 attestations (a time-sensitive indexer count, not a permanent chain fact)
+- Example attestation UID recorded: `0xb3d80f5328b1a415ba7c77fe5ba704d3d678ad4743a90d84474c23ba5d4c2b9c`
+- Example transaction recorded: `0xb3a3493e24a4ca14540a4c216ad01325270076333c9b8c67fced964f61a83051`
 
-## 6. Cross-Chain Hypothesis
+Primary references recorded in the repository:
 
-The principal working hypothesis concerns possible operational overlap between:
+- Schema: https://sepolia.easscan.org/schema/view/0xd3f24e873e8df2d9bb9af6f08ea1ddf61f65754d023f3ea761081e3e6a226a80
+- Example attestation: https://sepolia.easscan.org/attestation/view/0xb3d80f5328b1a415ba7c77fe5ba704d3d678ad4743a90d84474c23ba5d4c2b9c
+- Detailed repository evidence record: [`INVESTIGATION/EVIDENCE/EAS_SCHEMA_15_SEPOLIA.md`](../INVESTIGATION/EVIDENCE/EAS_SCHEMA_15_SEPOLIA.md)
 
-- **Legacy Ethereum Mainnet:** token infrastructure with high-volume distribution activity
-- **Transient Base L2:** token deployments reported in June 2024
-- **Repeated procedures:** deployment, funding, distribution, or calldata-generation that may reveal common automation
+**Assessment:** This is a Sepolia artifact according to the cited repository evidence. The reported count is indexer-derived and time-sensitive. This record does not verify a Base Schema #15, a Base Schema #16, the previously reported totals of 1,425 / 9 / 1,416 / 59, or any Mainnet/Base identity linkage. Those figures are retained only as unverified leads in `investigation/EVIDENCE_REGISTER.md`; they are not current findings.
 
-**Critical distinction:** The investigation must distinguish three separate propositions:
+An EAS document hash is a commitment to bytes under a specified hashing procedure. It does not identify a document or signer unless the original bytes, hashing procedure, attestation fields, transaction, and signer/control evidence are independently established.
 
-| Proposition | Definition |
-|---|---|
-| **A. Same software/operator** | Similar scripts or procedures were used |
-| **B. Same controlling entity** | Same person/organization controlled the signing keys |
-| **C. Same ultimate identity** | Controlling entity connected to real-world identity |
+## 6. Cross-chain hypotheses
 
-**Important:** A does not prove B, and B does not automatically prove C.
+Prior material proposes possible overlap among Ethereum Mainnet activity, Base deployments reportedly from June 2024, and EAS activity. These are **hypotheses**, not established links. For each proposed edge in a graph, record the source and testable proposition (for example: a bridge deposit is followed by a Base transaction from an independently matched address). Do not infer identity merely from temporal proximity or a shared label.
 
-## 7. Required Verification Sequence
+## 7. Verification plan
 
-### Phase 1 — Contract Provenance
+### Phase 1 — Contract provenance
 
-- [ ] Retrieve verified source and ABI for each target contract
-- [ ] Record deployment transaction hashes in full
-- [ ] Record deployer addresses in full
-- [ ] Record creation block numbers and timestamps
-- [ ] Compare compiler version, optimizer configuration, metadata hash, and bytecode
+- [ ] Establish chain ID and contract address for each target.
+- [ ] Retrieve source, ABI, runtime bytecode, and verification metadata from primary explorer or chain data.
+- [ ] Record creation transaction, block number, timestamp, deployer/creator and full transaction hash.
+- [ ] Compare compiler settings, metadata, creation/runtime bytecode, and proxy/factory structure.
 
-### Phase 2 — Transaction Fingerprinting
+### Phase 2 — Transaction evidence
 
-- [ ] Compare exact calldata selectors and argument encoding
-- [ ] Compare transaction ordering and nonce behavior
-- [ ] Compare gas-limit and fee-selection behavior
-- [ ] Identify repeated recipient-batching patterns
-- [ ] Identify shared intermediate funding addresses
+- [ ] Identify actual calls to the relevant selector and decode complete calldata.
+- [ ] Record sender, recipient, success status, block, transaction index, and receipt/logs.
+- [ ] Compare funding and bridge paths with explicit alternative explanations.
+- [ ] Treat nonce, timing, gas, and batching similarities as supporting evidence only.
 
-### Phase 3 — Cryptographic Linkage
+### Phase 3 — Hash reproduction
 
-- [ ] Recompute all candidate Keccak-256 constants from exact ABI encodings
-- [ ] Test every candidate address against the complete digest
-- [ ] Preserve the input address, encoding method, digest, and source transaction together
-- [ ] **Do not** treat partial or visually similar hashes as matches
+- [ ] Obtain candidate addresses from independent transaction/provenance evidence.
+- [ ] Reproduce the exact Keccak-256 computation specified in Section 4.
+- [ ] Preserve successful and unsuccessful tests alike.
+- [ ] Do not claim a match without the full input, digest, code, and review record.
 
-### Phase 4 — Cross-Chain Linkage
+### Phase 4 — EAS verification
 
-- [ ] Trace ETH and token funding from Ethereum Mainnet into Base
-- [ ] Identify bridge deposits and withdrawals
-- [ ] Compare timestamps and nonce sequences around deployment events
-- [ ] Identify common fee-payer or treasury addresses
-- [ ] Check whether deployment contracts or factories recur across chains
+- [ ] Query the schema registry on the stated network using the full schema UID.
+- [ ] Verify the creation transaction and decode schema registration event/data.
+- [ ] Verify any attestation by UID, schema UID, recipient, attester, timestamp, transaction, and raw data.
+- [ ] Recompute the document hash from the exact candidate document bytes where applicable.
+- [ ] Keep Sepolia, Base, and other networks as separate records; do not combine counts across networks without a defined, reproducible query.
 
-### Phase 5 — Ownership Verification
+### Phase 5 — Control and attribution
 
-Use **only** evidence capable of establishing control:
+- [ ] Establish address control only with appropriate cryptographic or transaction evidence and state exactly what it proves and when.
+- [ ] Account for contract wallets, multisigs, custodians, relayers, and delegated execution.
+- [ ] Require independent corroboration before real-world attribution.
+- [ ] Preserve contrary and exculpatory observations and record unresolved contradictions.
 
-- Signed message from the address
-- Transaction requiring control of the private key
-- Verifiable ownership claim independently tied to the same key/address
-- Cryptographic signature with independently validated provenance
-
-**Not sufficient for proof:** Social-media names, ENS labels, explorer labels, transaction comments, or behavioral similarity (these are correlation evidence, not cryptographic proof).
-
-## 8. Evidence Classification
+## 8. Evidence classification
 
 | Classification | Meaning |
 |---|---|
-| **VERIFIED** | Independently reproduced from on-chain or cryptographic data |
-| **CORROBORATED** | Supported by multiple independent records but not yet cryptographically conclusive |
-| **REPORTED** | Supplied during the investigation and awaiting independent verification |
-| **HYPOTHESIS** | Plausible investigative theory requiring testing |
-| **DISPROVED** | Contradicted by independently verified evidence |
+| **VERIFIED** | The specific stated fact was reproduced from cited primary data; scope, chain, and observation date are recorded. |
+| **CORROBORATED** | Multiple independent sources support the fact, but the stated proposition is not conclusively established. |
+| **REPORTED** | Present in prior notes or secondary/indexer data and not independently rechecked for this revision. |
+| **HYPOTHESIS** | A testable interpretation or proposed linkage, not a finding. |
+| **DISPROVED** | A precisely stated claim contradicted by reproducible evidence; retain the evidence and scope. |
+| **UNKNOWN** | Available evidence does not answer the question. |
 
-## 9. Current Conclusion
+A classification applies to an individual claim, not an entire document or address. “Verified contract code” does not mean “verified owner.”
 
-The investigation has a viable forensic framework but **does not yet establish a single point-of-origin identity**. 
+## 9. Contradictions and current conclusion
 
-**Strongest path forward:** Deterministic reconstruction of:
-- Deployment patterns
-- Funding flows
-- Calldata construction
-- Bytecode comparison
-- Cryptographic relationships
+The repository includes an investigation changelog entry asserting “sole attribution and control,” while the gas-saver evidence records and this casefile describe identity linkage as unproven. This contradiction is **unresolved**. The changelog assertion must not be treated as a verified conclusion until its exact subject, scope, primary evidence, reviewer, and date are documented in the evidence register. It may refer to a distinct finding; no assumption is made here.
 
-The `gasSaver` hash comparison is especially suitable for deterministic testing because the relevant encoding method is explicit. A confirmed exact digest match for a uniquely identified address would materially strengthen the linkage, although significance still depends on:
-- How the constant entered the contract
-- Whether the contract itself can be attributed to a controller
+**Current conclusion:** The repository contains leads for repeated `gasSaver` code and a Sepolia EAS Schema #15 record. The evidence summarized here does not establish a common controller across contracts/chains or a real-world identity. The hash preimage remains unreported/unreproduced in this casefile. The previously reported Base/EAS counts remain unverified.
 
-## 10. Chain of Custody / Reproducibility Requirements
+## 10. Publication and handling safeguards
 
-Every future finding **must** preserve:
+- Do not publish a real-world identity or allegation on the basis of code reuse, funding adjacency, labels, or an unreproduced hash.
+- Describe observed facts separately from interpretation and confidence.
+- Include alternative explanations, limitations, and disconfirming evidence.
+- Have a second reviewer inspect primary-source links and calculations before an attribution claim is circulated.
+- Minimize unnecessary personal data; preserve only what is required for a legitimate, authorized investigation.
 
-- Full blockchain address
-- Full transaction hash
-- Full block number
-- Chain/network identifier
-- UTC timestamp
-- Contract address
-- Function selector and complete calldata (where relevant)
-- Source URL / explorer record
-- Exact computation performed
-- Input bytes and resulting hash (for cryptographic tests)
-- Evidence classification
-- Date the finding was independently rechecked
+## 11. Chain of custody
 
-**Critical:** Abbreviated addresses such as `0x1234...abcd` **must not** be used when the complete address is available.
+Each evidence-register row must include, as applicable: claim ID; exact proposition; chain/network and chain ID; full address and transaction hash; block number and UTC timestamp; source URL and retrieval date; raw input or artifact; method/tool and version; output; classification; limitations; reviewer; and next verification action. Never replace a full identifier with a truncated form when the full value is available.
 
-## 11. Next Investigation Target
+## 12. Document control
 
-The next concrete task is to independently reconstruct the candidate-hash relationship and then correlate any confirmed address with the deployment/funding graph across Ethereum Mainnet and Base.
-
-**Parallel work:** EAS artifacts should be checked in parallel as a secondary evidence track, without assuming that EAS is either the source or the explanation until the on-chain evidence establishes that connection.
-
----
-
-## Document Control
-
-- **Version:** 1.0
-- **Status:** Ready for Investigation Review
-- **Last updated:** 2026-08-23
+- **Version:** 1.1
+- **Status:** Methodology and evidence reconciliation; not an attribution finding
+- **Last updated:** 2026-11-23
+- **Evidence register:** [`investigation/EVIDENCE_REGISTER.md`](EVIDENCE_REGISTER.md)
