@@ -1,3 +1,7 @@
+> **CORRECTION 2026-11-23:** `eth_getCode` returns zero bytes at `0x5136691Bd7826eBa653A81AbDCfD86494448C280` on Base, on two independent RPCs. No contract exists there. Every CRASH claim below is unverified until the correct address is re-established.
+>
+> **Superseding finding:** the gasSaver constant `0x5c53c7d6...b82a3a1` equals `keccak256(abi.encode(0x15caa83766b20261f5c30e074056fa83261d9418, 100))`. The privileged caller in this gate is the 0x15CaA drained contract wallet. Full receipts: `1800PROWORK/chain-forensics-casefile/logs/2026-11-23_gasSaver_gate_resolves_to_0x15CaA.md`.
+
 # CRASH / `gasSaver()` Evidence Record
 
 **Status:** VERIFIED CODE ARTIFACT / HASH-PREIMAGE LINK UNPROVEN  
